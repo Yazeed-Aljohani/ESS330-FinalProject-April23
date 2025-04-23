@@ -1,0 +1,29 @@
+project:
+  type: manuscript
+  output-dir: docs
+
+manuscript:
+  article: index.qmd
+
+format:
+  html:
+    comments:
+      hypothesis: true
+  docx: default
+  jats: default
+
+execute:
+  freeze: true
+
+title: "Emissions in the Top CO2 Polluting Countries Before and After COVID-19"
+author:
+  - name: "Yazeed Aljohani"
+    email: "yazeed21@colostate.edu"
+    affiliation: "Colorado State University"
+    corresponding: true
+  - name: "Josh Puyear"
+    affiliation: "Colorado State University"
+
+csl: apa.csl
+
+
