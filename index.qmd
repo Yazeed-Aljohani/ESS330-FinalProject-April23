@@ -147,6 +147,81 @@ We also created a period variable to group data into pre-COVID (2015–2019), du
 
 # Methods
 
-Our dataset from Our World in Data includes emissions data from earliest records up to 2023. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita.
+Our reseach focuses on revealing relationships between countries and between predictor variables of greenhouse emissions per capita excluding land use. The dataset from Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita.
+
+```{r, echo = TRUE}
+
+#include a table of variables and their meaning (reference df above)
+
+```
 
 
+```{r, echo = TRUE}
+#loading timeseries packages
+library(tidyverse)
+library(tidymodels)
+library(tsibble)
+library(feasts)
+
+# making a tsibble from cleaned data
+
+
+```
+
+``` {r, echo = TRUE}
+#making a recipe based on timeseries data with relevant predictor variables
+
+
+```
+
+
+```{r, echo = TRUE}
+#test the data for trends
+
+#test the data for noise (lecture 21)
+
+
+```
+
+```{r, echo = TRUE}
+# making a timeseries recipe
+
+
+```
+
+```{r, echo = TRUE}
+# looking for significant difference in emissions per capita excluding land use change before, during, and after covid
+
+
+```
+
+```{r, echo = TRUE}
+# looking for significant difference in transportation emissions between countries
+
+
+#looking for signfiicant difference in industrial emissions between countries
+
+```
+
+```{r, echo = TRUE}
+
+
+```
+
+```{r, echo = TRUE}
+
+
+
+```
+
+```{r, echo = TRUE}
+
+
+
+```
+
+```{r, echo = TRUE}
+
+
+
+```
