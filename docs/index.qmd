@@ -7,7 +7,7 @@ author:
     affiliation: "Colorado State University"
   - name: "Cade Vanek"
     affiliation: "Colorado State University"
-date: "Today"
+date: 2025-04-24"
 bibliography: references.bib
 keywords: [CO2 emissions, COVID-19, GHG, workflow, ANOVA, sustainability]
 abstract: |
