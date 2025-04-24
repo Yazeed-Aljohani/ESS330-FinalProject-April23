@@ -11,7 +11,7 @@ date: 2025-04-24"
 bibliography: references.bib
 keywords: [CO2 emissions, COVID-19, GHG, workflow, ANOVA, sustainability]
 abstract: |
-  This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
+  This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main [response?] variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
 ---
 
 # Introduction, Background, and Motivation
@@ -143,3 +143,10 @@ We filtered the dataset to include:
 -   The top 5 countries based on total GHG emissions (excluding land-use change)
 
 We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.
+
+
+# Methods
+
+Our dataset from Our World in Data includes emissions data from earliest records up to 2023. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita.
+
+
