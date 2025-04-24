@@ -124,7 +124,7 @@ for (c in unique(df$country)) {
 
 #### Data Description
 
-We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review. The dataset covers emissions from fossil fuels, industry, and land-use change.
+We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review [@owid-scaling-up-ai]. The dataset covers emissions from fossil fuels, industry, and land-use change.
 
 For this project, we focused on the years 2015 to 2022 and selected the top five CO₂-polluting countries: China, the United States, India, Russia, and Japan. We used variables such as:
 

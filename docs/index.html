@@ -82,6 +82,7 @@ div.csl-indent {
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Global carbon budget 2019;,citation_author=Pierre Friedlingstein;,citation_author=Matthew W Jones;,citation_author=Michael O’Sullivan;,citation_author=Robbie M Andrew;,citation_author=Judith Hauck;,citation_author=Glen P Peters;,citation_author=Wouter Peters;,citation_author=Julia Pongratz;,citation_author=Stephen Sitch;,citation_author=Corinne Le Quéré;,citation_author=others;,citation_publication_date=2019;,citation_cover_date=2019;,citation_year=2019;,citation_issue=4;,citation_volume=11;,citation_journal_title=Earth System Science Data;,citation_publisher=Copernicus GmbH;">
 <meta name="citation_reference" content="citation_title=Current and future global climate impacts resulting from COVID-19;,citation_author=Piers M Forster;,citation_author=Harriet I Forster;,citation_author=Mat J Evans;,citation_author=Matthew J Gidden;,citation_author=Chris D Jones;,citation_author=Christoph A Keller;,citation_author=Robin D Lamboll;,citation_author=Corinne Le Quéré;,citation_author=Joeri Rogelj;,citation_author=Deborah Rosen;,citation_author=others;,citation_publication_date=2020;,citation_cover_date=2020;,citation_year=2020;,citation_issue=10;,citation_volume=10;,citation_journal_title=Nature Climate Change;,citation_publisher=Nature Publishing Group;">
+<meta name="citation_reference" content="citation_title=Scaling up: How increasing inputs has made artificial intelligence more capable;,citation_author=Veronika Samborska;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_journal_title=Our World in Data;">
 </head>
 
 <body>
@@ -249,7 +250,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <section id="data-description" class="level4">
 <h4 class="anchored" data-anchor-id="data-description">Data Description</h4>
-<p>We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review. The dataset covers emissions from fossil fuels, industry, and land-use change.</p>
+<p>We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review <span class="citation" data-cites="owid-scaling-up-ai">(<a href="#ref-owid-scaling-up-ai" role="doc-biblioref">Samborska, 2025</a>)</span>. The dataset covers emissions from fossil fuels, industry, and land-use change.</p>
 <p>For this project, we focused on the years 2015 to 2022 and selected the top five CO₂-polluting countries: China, the United States, India, Russia, and Japan. We used variables such as:</p>
 <ul>
 <li><p>ghg_excluding_lucf_per_capita (our main variable),</p></li>
@@ -275,6 +276,9 @@ Forster, P. M., Forster, H. I., Evans, M. J., Gidden, M. J., Jones, C. D., Kelle
 </div>
 <div id="ref-friedlingstein2019global" class="csl-entry" role="listitem">
 Friedlingstein, P., Jones, M. W., O’Sullivan, M., Andrew, R. M., Hauck, J., Peters, G. P., Peters, W., Pongratz, J., Sitch, S., Le Quéré, C., et al. (2019). Global carbon budget 2019. <em>Earth System Science Data</em>, <em>11</em>(4), 1783–1838.
+</div>
+<div id="ref-owid-scaling-up-ai" class="csl-entry" role="listitem">
+Samborska, V. (2025). Scaling up: How increasing inputs has made artificial intelligence more capable. <em>Our World in Data</em>.
 </div>
 </div></section></div></main>
 <!-- /main column -->
@@ -699,7 +703,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"openEffect":"zoom","closeEffect":"zoom","selector":".lightbox"});
+<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","closeEffect":"zoom","loop":false,"selector":".lightbox","descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
