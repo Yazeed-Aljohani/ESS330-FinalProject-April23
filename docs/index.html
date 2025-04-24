@@ -57,6 +57,9 @@ div.csl-indent {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script async="" src="https://hypothes.is/embed.js"></script>
 <script>
   window.document.addEventListener("DOMContentLoaded", function (_event) {
@@ -162,8 +165,9 @@ div.csl-indent {
    
   <ul>
   <li><a href="#introduction-background-and-motivation" id="toc-introduction-background-and-motivation" class="nav-link active" data-scroll-target="#introduction-background-and-motivation">Introduction, Background, and Motivation</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><strong>Data Exploration</strong></a></li>
   </ul>
-</nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="index-preview.html"><i class="bi bi-journal-code"></i>Article Notebook</a></li></ul></div></nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -174,8 +178,8 @@ div.csl-indent {
   
 
 
-<section id="introduction-background-and-motivation" class="level2">
-<h2 class="anchored" data-anchor-id="introduction-background-and-motivation">Introduction, Background, and Motivation</h2>
+<section id="introduction-background-and-motivation" class="level1">
+<h1>Introduction, Background, and Motivation</h1>
 <p>Climate change remains one of the most urgent global challenges, driven in large part by human greenhouse gas emissions. Among these, carbon dioxide is the most significant. Carbon dioxide is released through many activities such as burning fossil fuels, industrial production, and land-use practices. Even though international efforts like the Paris Agreement have pushed countries to reduce emissions, many continue to show increasing trends. A small group of countries contributes the most emissions globally, both in total and per person. These major contributors include countries like China, the United States, and India <span class="citation" data-cites="friedlingstein2019global">(<a href="#ref-friedlingstein2019global" role="doc-biblioref">Friedlingstein et al., 2019</a>)</span>.</p>
 <p>This project focuses on the five largest carbon dioxide polluting countries: China, the United States, India, Russia, and Japan. These countries are responsible for a significant share of global emissions and reflect a range of economic systems, energy sources, and industrial structures. To allow meaningful comparisons, we center our analysis on greenhouse gas emissions per person, using the variable ghg_excluding_lucf_per_capita. This variable removes land-use change from the emissions total, isolating emissions from industrial activity and fossil fuel use. By using this approach, we can better understand how much pollution is tied to each person’s activity and consumption within each country.</p>
 <p>The COVID-19 pandemic created a global disruption that affected travel, trade, and production. Lockdowns and other restrictions slowed down factories, reduced transportation, and caused shifts in energy use. As a result, global carbon dioxide emissions in 2020 dropped by approximately 5.4 percent, marking the largest single-year decrease in history <span class="citation" data-cites="forster2020current">(<a href="#ref-forster2020current" role="doc-biblioref">Forster et al., 2020</a>)</span>. This sudden drop was mostly due to temporary changes. As countries began reopening in 2021 and 2022, emissions started climbing again.</p>
@@ -185,7 +189,84 @@ div.csl-indent {
 <p>Our analysis helps link data analysis to climate solutions. By identifying what types of emissions dropped the most during the pandemic and which ones came back quickly, we can suggest where to focus efforts. If, for instance, oil-related emissions dropped during lockdowns but then returned quickly, that might show a need for deeper investment in alternative transportation options. If manufacturing emissions remained stable, that could show how industrial processes are harder to change without long-term plans and policies.</p>
 <p>This project is also a chance to make emissions data more relatable. People often hear that emissions went down during the pandemic, but they may not know what caused the change or how long it lasted. By using clear visuals and country comparisons, we can help explain these trends to wider audiences. This is especially important as the world faces increasing climate-related disasters. Understanding emission trends can support smarter planning and better communication around sustainable transitions.</p>
 <p>Lastly, we are motivated by a bigger question: what can we learn from this accidental global experiment? The pandemic gave the world a chance to see what happens when daily life suddenly changes. Some of those changes, like working from home or using less transportation, might become long-term habits. Others may disappear as economies reopen. By analyzing which emission reductions lasted and which faded, we can start to imagine more realistic and effective ways to slow down climate change.</p>
+</section>
+<section id="data-exploration" class="level1">
+<h1><strong>Data Exploration</strong></h1>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+<a class="quarto-notebook-link" id="nblink-1" href="index-preview.html">Source: Article Notebook</a></div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+--- ANOVA for China ---
+            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+period       2 1.2803  0.6402   13.06 0.0103 *
+Residuals    5 0.2451  0.0490                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
+--- ANOVA for India ---
+            Df  Sum Sq  Mean Sq F value Pr(&gt;F)
+period       2 0.04456 0.022280   2.956  0.142
+Residuals    5 0.03769 0.007537               
+
+--- ANOVA for Japan ---
+            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+period       2 1.6155  0.8077   7.299 0.0329 *
+Residuals    5 0.5533  0.1107                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+--- ANOVA for Russia ---
+            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+period       2 1.3923  0.6961   4.433 0.0781 .
+Residuals    5 0.7852  0.1570                 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+--- ANOVA for United States ---
+            Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+period       2  4.906  2.4529   21.37 0.00355 **
+Residuals    5  0.574  0.1148                   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<section id="data-description" class="level4">
+<h4 class="anchored" data-anchor-id="data-description">Data Description</h4>
+<p>We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review. The dataset covers emissions from fossil fuels, industry, and land-use change.</p>
+<p>For this project, we focused on the years 2015 to 2022 and selected the top five CO₂-polluting countries: China, the United States, India, Russia, and Japan. We used variables such as:</p>
+<ul>
+<li><p>ghg_excluding_lucf_per_capita (our main variable),</p></li>
+<li><p>Sector-based emissions: coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2.</p></li>
+</ul>
+</section>
+<section id="data-cleaning" class="level4">
+<h4 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h4>
+<p>We filtered the dataset to include:</p>
+<ul>
+<li><p>Only rows with valid ISO country codes</p></li>
+<li><p>Only years 2015–2022</p></li>
+<li><p>The top 5 countries based on total GHG emissions (excluding land-use change)</p></li>
+</ul>
+<p>We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.</p>
+
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
@@ -618,6 +699,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"openEffect":"zoom","closeEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

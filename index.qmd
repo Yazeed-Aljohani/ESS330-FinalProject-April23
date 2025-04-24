@@ -14,7 +14,7 @@ abstract: |
   This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
 ---
 
-## Introduction, Background, and Motivation
+# Introduction, Background, and Motivation
 
 Climate change remains one of the most urgent global challenges, driven in large part by human greenhouse gas emissions. Among these, carbon dioxide is the most significant. Carbon dioxide is released through many activities such as burning fossil fuels, industrial production, and land-use practices. Even though international efforts like the Paris Agreement have pushed countries to reduce emissions, many continue to show increasing trends. A small group of countries contributes the most emissions globally, both in total and per person. These major contributors include countries like China, the United States, and India [@friedlingstein2019global].
 
@@ -33,3 +33,113 @@ Our analysis helps link data analysis to climate solutions. By identifying what 
 This project is also a chance to make emissions data more relatable. People often hear that emissions went down during the pandemic, but they may not know what caused the change or how long it lasted. By using clear visuals and country comparisons, we can help explain these trends to wider audiences. This is especially important as the world faces increasing climate-related disasters. Understanding emission trends can support smarter planning and better communication around sustainable transitions.
 
 Lastly, we are motivated by a bigger question: what can we learn from this accidental global experiment? The pandemic gave the world a chance to see what happens when daily life suddenly changes. Some of those changes, like working from home or using less transportation, might become long-term habits. Others may disappear as economies reopen. By analyzing which emission reductions lasted and which faded, we can start to imagine more realistic and effective ways to slow down climate change.
+
+# **Data Exploration**
+
+```{r}
+library(tidyverse)
+library(readr)
+library(ggplot2)
+library(tidyr)
+
+data <- read_csv("data/owid-co2-data (1).csv")
+
+```
+
+```{r}
+data_filtered <- data |>
+  filter(year >= 2015, year <= 2022) |>
+  filter(!is.na(iso_code) & nchar(iso_code) == 3)
+```
+
+```{r}
+# Getting top 5 CO2 emitting countries by total GHG (excluding land use)
+top_emitters <- data_filtered |>
+  group_by(country) |>
+  summarise(total_ghg = sum(total_ghg_excluding_lucf, na.rm = TRUE)) |>
+  arrange(desc(total_ghg)) |>
+  slice_head(n = 5) |>
+  pull(country)
+
+# Filtering data to include only those countries and select relevant variables
+df <- data_filtered |>
+  filter(country %in% top_emitters) |>
+  select(country, year, ghg_excluding_lucf_per_capita,
+         coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2)
+
+```
+
+```{r}
+# Adding period category (pre, during, post COVID)
+df <- df |>
+  mutate(period = case_when(
+    year <= 2019 ~ "pre_covid",
+    year == 2020 ~ "during_covid",
+    year >= 2021 ~ "post_covid"
+  )) |>
+  mutate(period = factor(period, levels = c("pre_covid", "during_covid", "post_covid")))
+
+```
+
+```{r}
+ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = country, group = country)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Per Capita GHG Emissions (Excl. Land Use) by Country (2015–2022)",
+    x = "Year", y = "GHG per Capita (tCO₂e)"
+  ) +
+  theme_minimal()
+
+```
+
+```{r}
+df_long <- df |>
+  pivot_longer(cols = c(coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2),
+               names_to = "sector", values_to = "emissions")
+
+ggplot(df_long, aes(x = factor(year), y = emissions, color = sector, group = interaction(sector, country))) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ country) +
+  labs(title = "Sector-specific CO₂ Emissions (2015–2022)", x = "Year", y = "Emissions (MtCO₂)") +
+  theme_minimal()
+
+```
+
+```{r}
+# Running ANOVA on each country if they have more than one period
+for (c in unique(df$country)) {
+  df_country <- df |> filter(country == c)
+  if (n_distinct(df_country$period) > 1) {
+    cat("\n--- ANOVA for", c, "---\n")
+    model <- aov(ghg_excluding_lucf_per_capita ~ period, data = df_country)
+    print(summary(model))
+  } else {
+    cat("\n--- Skipped ANOVA for", c, ": not enough periods ---\n")
+  }
+}
+
+```
+
+#### Data Description
+
+We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review. The dataset covers emissions from fossil fuels, industry, and land-use change.
+
+For this project, we focused on the years 2015 to 2022 and selected the top five CO₂-polluting countries: China, the United States, India, Russia, and Japan. We used variables such as:
+
+-   ghg_excluding_lucf_per_capita (our main variable),
+
+-   Sector-based emissions: coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2.
+
+#### Data Cleaning
+
+We filtered the dataset to include:
+
+-   Only rows with valid ISO country codes
+
+-   Only years 2015–2022
+
+-   The top 5 countries based on total GHG emissions (excluding land-use change)
+
+We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.
