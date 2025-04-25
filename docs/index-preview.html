@@ -295,7 +295,14 @@
    
   <ul>
   <li><a href="#introduction-background-and-motivation" id="toc-introduction-background-and-motivation" class="nav-link active" data-scroll-target="#introduction-background-and-motivation">Introduction, Background, and Motivation</a></li>
-  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration"><strong>Data Exploration</strong></a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#data-exploration-methods" id="toc-data-exploration-methods" class="nav-link" data-scroll-target="#data-exploration-methods">Data Exploration &amp; Methods:</a>
+  <ul class="collapse">
+  <li><a href="#data-source" id="toc-data-source" class="nav-link" data-scroll-target="#data-source">Data Source</a></li>
+  <li><a href="#data-cleaning" id="toc-data-cleaning" class="nav-link" data-scroll-target="#data-cleaning">Data Cleaning</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration">Data Exploration</a></li>
+  <li><a href="#statistical-analyses" id="toc-statistical-analyses" class="nav-link" data-scroll-target="#statistical-analyses">Statistical Analyses</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -314,9 +321,13 @@
 <p>Our analysis helps link data analysis to climate solutions. By identifying what types of emissions dropped the most during the pandemic and which ones came back quickly, we can suggest where to focus efforts. If, for instance, oil-related emissions dropped during lockdowns but then returned quickly, that might show a need for deeper investment in alternative transportation options. If manufacturing emissions remained stable, that could show how industrial processes are harder to change without long-term plans and policies.</p>
 <p>This project is also a chance to make emissions data more relatable. People often hear that emissions went down during the pandemic, but they may not know what caused the change or how long it lasted. By using clear visuals and country comparisons, we can help explain these trends to wider audiences. This is especially important as the world faces increasing climate-related disasters. Understanding emission trends can support smarter planning and better communication around sustainable transitions.</p>
 <p>Lastly, we are motivated by a bigger question: what can we learn from this accidental global experiment? The pandemic gave the world a chance to see what happens when daily life suddenly changes. Some of those changes, like working from home or using less transportation, might become long-term habits. Others may disappear as economies reopen. By analyzing which emission reductions lasted and which faded, we can start to imagine more realistic and effective ways to slow down climate change.</p>
+<section id="research-question" class="level4">
+<h4 class="anchored" data-anchor-id="research-question">Research Question</h4>
+<p>How did per capita greenhouse gas emissions change before, during, and after COVID-19 in the five largest CO₂-polluting countries, and which sector-specific emissions are the strongest predictors of these changes?</p>
 </section>
-<section id="data-exploration" class="level1">
-<h1><strong>Data Exploration</strong></h1>
+</section>
+<section id="section" class="level1">
+<h1></h1>
 <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -347,6 +358,31 @@ dbl (77): year, population, gdp, cement_co2, cement_co2_per_capita, co2, co2...
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div></div>
+</section>
+<section id="data-exploration-methods" class="level1">
+<h1>Data Exploration &amp; Methods:</h1>
+<section id="data-source" class="level3">
+<h3 class="anchored" data-anchor-id="data-source">Data Source</h3>
+<ul>
+<li><p>We used greenhouse gas emissions data from Our World in Data <span class="citation" data-cites="owid-scaling-up-ai">(<a href="#ref-owid-scaling-up-ai" role="doc-biblioref">Samborska, 2025</a>)</span>, which compiles information from the Global Carbon Project and other sources.</p></li>
+<li><p>Focused years: 2015–2022.</p></li>
+<li><p>Countries: China, United States, India, Russia, and Japan (top 5 emitters).</p></li>
+</ul>
+</section>
+<section id="data-cleaning" class="level3">
+<h3 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h3>
+<p>Filtered for years 2015–2022.</p>
+<p>Selected countries with valid ISO codes and the top 5 CO₂-polluting countries.</p>
+<p>Selected key variables: ghg_excluding_lucf_per_capita, coal_co2, oil_co2, gas_co2, cement_co2, and other_industry_co2.</p>
+<p>Removed missing data using na.omit().</p>
+<p>Created a new variable period to group years into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022).</p>
+</section>
+<section id="data-exploration" class="level3">
+<h3 class="anchored" data-anchor-id="data-exploration">Data Exploration</h3>
+<ul>
+<li><p>Plotted per capita GHG emissions over time for each country.</p></li>
+<li><p>Plotted sector-specific CO₂ emissions by country and year.</p></li>
+</ul>
 <div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data_filtered <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">2015</span>, year <span class="sc">&lt;=</span> <span class="dv">2022</span>) <span class="sc">|&gt;</span></span>
@@ -365,7 +401,8 @@ dbl (77): year, population, gdp, cement_co2, cement_co2_per_capita, co2, co2...
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> data_filtered <span class="sc">|&gt;</span></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">%in%</span> top_emitters) <span class="sc">|&gt;</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, year, ghg_excluding_lucf_per_capita,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>         coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>         coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(ghg_excluding_lucf_per_capita)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding period category (pre, during, post COVID)</span></span>
@@ -394,6 +431,7 @@ dbl (77): year, population, gdp, cement_co2, cement_co2_per_capita, co2, co2...
 </div>
 </div>
 </div></div>
+<p>Thise graph shows how greenhouse gas emissions per person changed in China, the United States, India, Russia, and Japan from 2015 to 2022. You can see a drop around 2020 during COVID, especially in the United States and Russia. Some countries’ emissions started going back up after 2020.</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df_long <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">c</span>(coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2),</span>
@@ -421,6 +459,14 @@ dbl (77): year, population, gdp, cement_co2, cement_co2_per_capita, co2, co2...
 </div>
 </div>
 </div></div>
+<p>This graph shows where each country’s emissions came from — like coal, oil, gas, cement, or other industries. For example, China has a lot of coal emissions, and the United States has more oil emissions. You can also see how emissions from some sectors dropped in 2020 and then changed again after COVID.</p>
+</section>
+<section id="statistical-analyses" class="level3">
+<h3 class="anchored" data-anchor-id="statistical-analyses">Statistical Analyses</h3>
+<ul>
+<li><p>ANOVA: Tested whether there were significant differences in per capita GHG emissions across the three periods (pre-, during-, post-COVID) for each country.</p></li>
+<li><p>Linear Regression: Modeled per capita GHG emissions (ghg_excluding_lucf_per_capita) as a function of sector-specific CO₂ emissions (coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2).</p></li>
+</ul>
 <div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Running ANOVA on each country if they have more than one period</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (c <span class="cf">in</span> <span class="fu">unique</span>(df<span class="sc">$</span>country)) {</span>
@@ -469,24 +515,105 @@ Residuals    5  0.574  0.1148
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div></div>
-<section id="data-description" class="level4">
-<h4 class="anchored" data-anchor-id="data-description">Data Description</h4>
-<p>We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review <span class="citation" data-cites="owid-scaling-up-ai">(<a href="#ref-owid-scaling-up-ai" role="doc-biblioref">Samborska, 2025</a>)</span>. The dataset covers emissions from fossil fuels, industry, and land-use change.</p>
-<p>For this project, we focused on the years 2015 to 2022 and selected the top five CO₂-polluting countries: China, the United States, India, Russia, and Japan. We used variables such as:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Country</th>
+<th style="text-align: left;">p-value</th>
+<th style="text-align: left;">Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">China</td>
+<td style="text-align: left;">0.0103</td>
+<td style="text-align: left;">Significant change (p &lt; 0.05)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">India</td>
+<td style="text-align: left;">0.142</td>
+<td style="text-align: left;">No significant change (p &gt; 0.05)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Japan</td>
+<td style="text-align: left;">0.0329</td>
+<td style="text-align: left;">Significant change (p &lt; 0.05)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Russia</td>
+<td style="text-align: left;">0.0781</td>
+<td style="text-align: left;">Not quite significant (p &gt; 0.05)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">United States</td>
+<td style="text-align: left;">0.00355</td>
+<td style="text-align: left;">Significant change (p &lt; 0.01)</td>
+</tr>
+</tbody>
+</table>
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lm_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(ghg_excluding_lucf_per_capita <span class="sc">~</span> coal_co2 <span class="sc">+</span> oil_co2 <span class="sc">+</span> gas_co2 <span class="sc">+</span> cement_co2 <span class="sc">+</span> other_industry_co2, <span class="at">data =</span> df)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = ghg_excluding_lucf_per_capita ~ coal_co2 + oil_co2 + 
+    gas_co2 + cement_co2 + other_industry_co2, data = df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-2.2833 -0.3541  0.1507  0.4693  1.4989 
+
+Coefficients:
+                     Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)         8.2798981  0.3661956  22.611  &lt; 2e-16 ***
+coal_co2            0.0003590  0.0008477   0.424 0.675372    
+oil_co2            -0.0021149  0.0005530  -3.825 0.000737 ***
+gas_co2             0.0074705  0.0008038   9.293 9.53e-10 ***
+cement_co2         -0.0237091  0.0076398  -3.103 0.004572 ** 
+other_industry_co2  0.0864354  0.0379252   2.279 0.031111 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.9042 on 26 degrees of freedom
+  (8 observations deleted due to missingness)
+Multiple R-squared:  0.9521,    Adjusted R-squared:  0.9429 
+F-statistic: 103.3 on 5 and 26 DF,  p-value: 2.663e-16</code></pre>
+</div>
+</div></div>
+<section id="model-validation" class="level4">
+<h4 class="anchored" data-anchor-id="model-validation">Model Validation</h4>
 <ul>
-<li><p>ghg_excluding_lucf_per_capita (our main variable),</p></li>
-<li><p>Sector-based emissions: coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2.</p></li>
+<li><p>Plotted actual vs.&nbsp;predicted emissions to assess model fit.</p></li>
+<li><p>Visualized regression coefficients with confidence intervals to interpret the influence of each emission sector.</p></li>
 </ul>
-</section>
-<section id="data-cleaning" class="level4">
-<h4 class="anchored" data-anchor-id="data-cleaning">Data Cleaning</h4>
-<p>We filtered the dataset to include:</p>
-<ul>
-<li><p>Only rows with valid ISO country codes</p></li>
-<li><p>Only years 2015–2022</p></li>
-<li><p>The top 5 countries based on total GHG emissions (excluding land-use change)</p></li>
-</ul>
-<p>We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># After selecting the variables, clean properly:</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> <span class="fu">drop_na</span>(ghg_excluding_lucf_per_capita, coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Now build the model</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>lm_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(ghg_excluding_lucf_per_capita <span class="sc">~</span> coal_co2 <span class="sc">+</span> oil_co2 <span class="sc">+</span> gas_co2 <span class="sc">+</span> cement_co2 <span class="sc">+</span> other_industry_co2, <span class="at">data =</span> df)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Now add predictions</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>predicted <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_model)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Now plot Actual vs Predicted</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> ghg_excluding_lucf_per_capita, <span class="at">y =</span> predicted, <span class="at">color =</span> country)) <span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Actual vs Predicted GHG per Capita"</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Actual GHG per Capita"</span>,</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted GHG per Capita"</span>) <span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><a href="index_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div></div>
+<p>This graph compares the real emissions to the ones predicted by our model. If the points are close to the dashed line, it means the model did a good job. Most of the points are pretty close to the line, so the model worked well.</p>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
 <div id="ref-forster2020current" class="csl-entry" role="listitem">
 Forster, P. M., Forster, H. I., Evans, M. J., Gidden, M. J., Jones, C. D., Keller, C. A., Lamboll, R. D., Le Quéré, C., Rogelj, J., Rosen, D., et al. (2020). Current and future global climate impacts resulting from COVID-19. <em>Nature Climate Change</em>, <em>10</em>(10), 913–919.
@@ -498,6 +625,7 @@ Friedlingstein, P., Jones, M. W., O’Sullivan, M., Andrew, R. M., Hauck, J., Pe
 Samborska, V. (2025). Scaling up: How increasing inputs has made artificial intelligence more capable. <em>Our World in Data</em>.
 </div>
 </div>
+</section>
 </section>
 </section>
      </main>
@@ -920,7 +1048,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","openEffect":"zoom","closeEffect":"zoom","selector":".lightbox"});
+</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","selector":".lightbox","loop":false,"openEffect":"zoom","descPosition":"bottom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

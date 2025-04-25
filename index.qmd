@@ -11,7 +11,7 @@ date: 2025-04-24"
 bibliography: references.bib
 keywords: [CO2 emissions, COVID-19, GHG, workflow, ANOVA, sustainability]
 abstract: |
-  This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main [response?] variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
+  This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
 ---
 
 # Introduction, Background, and Motivation
@@ -34,7 +34,11 @@ This project is also a chance to make emissions data more relatable. People ofte
 
 Lastly, we are motivated by a bigger question: what can we learn from this accidental global experiment? The pandemic gave the world a chance to see what happens when daily life suddenly changes. Some of those changes, like working from home or using less transportation, might become long-term habits. Others may disappear as economies reopen. By analyzing which emission reductions lasted and which faded, we can start to imagine more realistic and effective ways to slow down climate change.
 
-# **Data Exploration**
+#### Research Question
+
+How did per capita greenhouse gas emissions change before, during, and after COVID-19 in the five largest CO₂-polluting countries, and which sector-specific emissions are the strongest predictors of these changes?
+
+# 
 
 ```{r}
 library(tidyverse)
@@ -45,7 +49,35 @@ library(tidyr)
 data <- read_csv("data/owid-co2-data (1).csv")
 
 ```
-## Narrowing Data to 2015-2022
+
+# Data Exploration & Methods:
+
+### Data Source
+
+-   We used greenhouse gas emissions data from Our World in Data [@owid-scaling-up-ai], which compiles information from the Global Carbon Project and other sources.
+
+-   Focused years: 2015–2022.
+
+-   Countries: China, United States, India, Russia, and Japan (top 5 emitters).
+
+### Data Cleaning
+
+Filtered for years 2015–2022.
+
+Selected countries with valid ISO codes and the top 5 CO₂-polluting countries.
+
+Selected key variables: ghg_excluding_lucf_per_capita, coal_co2, oil_co2, gas_co2, cement_co2, and other_industry_co2.
+
+Removed missing data using na.omit().
+
+Created a new variable period to group years into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022).
+
+### Data Exploration
+
+-   Plotted per capita GHG emissions over time for each country.
+
+-   Plotted sector-specific CO₂ emissions by country and year.
+
 ```{r}
 data_filtered <- data |>
   filter(year >= 2015, year <= 2022) |>
@@ -66,7 +98,7 @@ df <- data_filtered |>
   filter(country %in% top_emitters) |>
   select(country, year, ghg_excluding_lucf_per_capita,
          coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2)
-
+df <- df |> drop_na(ghg_excluding_lucf_per_capita)
 ```
 
 ```{r}
@@ -81,7 +113,6 @@ df <- df |>
 
 ```
 
-Per capita ghg emissions top 5 polluters
 ```{r}
 ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = country, group = country)) +
   geom_line() +
@@ -93,6 +124,8 @@ ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = coun
   theme_minimal()
 
 ```
+
+Thise graph shows how greenhouse gas emissions per person changed in China, the United States, India, Russia, and Japan from 2015 to 2022. You can see a drop around 2020 during COVID, especially in the United States and Russia. Some countries' emissions started going back up after 2020.
 
 ```{r}
 df_long <- df |>
@@ -107,6 +140,14 @@ ggplot(df_long, aes(x = factor(year), y = emissions, color = sector, group = int
   theme_minimal()
 
 ```
+
+This graph shows where each country's emissions came from — like coal, oil, gas, cement, or other industries. For example, China has a lot of coal emissions, and the United States has more oil emissions. You can also see how emissions from some sectors dropped in 2020 and then changed again after COVID.
+
+### Statistical Analyses
+
+-   ANOVA: Tested whether there were significant differences in per capita GHG emissions across the three periods (pre-, during-, post-COVID) for each country.
+
+-   Linear Regression: Modeled per capita GHG emissions (ghg_excluding_lucf_per_capita) as a function of sector-specific CO₂ emissions (coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2).
 
 ```{r}
 # Running ANOVA on each country if they have more than one period
@@ -123,145 +164,44 @@ for (c in unique(df$country)) {
 
 ```
 
-#### Data Description
+| Country       | p-value | Interpretation                    |
+|:--------------|:--------|:----------------------------------|
+| China         | 0.0103  | Significant change (p \< 0.05)    |
+| India         | 0.142   | No significant change (p \> 0.05) |
+| Japan         | 0.0329  | Significant change (p \< 0.05)    |
+| Russia        | 0.0781  | Not quite significant (p \> 0.05) |
+| United States | 0.00355 | Significant change (p \< 0.01)    |
 
-We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review [@owid-scaling-up-ai]. The dataset covers emissions from fossil fuels, industry, and land-use change.
-
-For this project, we focused on the years 2015 to 2022 and selected the top five CO₂-polluting countries: China, the United States, India, Russia, and Japan. We used variables such as:
-
--   ghg_excluding_lucf_per_capita (our main variable),
-
--   Sector-based emissions: coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2.
-
-#### Data Cleaning
-
-We filtered the dataset to include:
-
--   Only rows with valid ISO country codes
-
--   Only years 2015–2022
-
--   The top 5 countries based on total GHG emissions (excluding land-use change)
-
-We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.
-
-
-# Methods
-
-Our reseach focuses on revealing relationships between countries and between predictor variables of greenhouse emissions per capita excluding land use. The dataset from Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita. We will be using modeltime to make a timeseries model against which predictor variables can be tested.
-
-```{r, echo = TRUE}
-
-#include a table of variables and their meaning (reference df above)
-# copy metadata from orig proj to here
-names(df)
-```
-#goal: find explainability of certain predictor variables
-
-```{r, echo = TRUE}
-#loading timeseries packages
-library(tidyverse)
-library(tsibble)
-library(feasts)
-library(lubridate)
-library(modeltime)
-
-#Make a date column from the year?
-df <- df %>%  mutate(Date = as.Date(year), index = NULL)
-#lubridate
-ymd(df$year)
-ymd(df$Date)
-
-#format(Sys.Date(), '%Y.%m.%d')
-#df <- df %>%  mutate(Date = Sys.Date())
-#this didn't work; it just added date history
-#I'm on the right track with a date column
-
-#attaching a date string to the year to make the data work within the modeltime package
-df <- df %>%  mutate(date_string = paste0(year, "-12-31"),
-  Date = ymd(date_string))
-
-#Check to see if modeltime requires a tsibble
-# then, making a tsibble from cleaned data
-df_tbl <- as_tsibble(df)
-#from lecture 21
-head(df_tbl)
+```{r}
+lm_model <- lm(ghg_excluding_lucf_per_capita ~ coal_co2 + oil_co2 + gas_co2 + cement_co2 + other_industry_co2, data = df)
+summary(lm_model)
 ```
 
-## Making a recipe
-``` {r, echo = TRUE}
-#set a seed
-set.seed(341)
+#### Model Validation
 
-#making a recipe based on timeseries data with relevant predictor variables
-rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year + coal_co2 + oil_co2 + other_industry_co2) %>%
-  # Log transform the predictor variables (aridity and p_mean)
-  step_log(all_predictors()) %>%
-  # Add an interaction term between aridity and p_mean
-  step_interact(terms = ~ aridity:p_mean) |> 
-  # Drop any rows with missing values in the pred
-  step_naomit(all_predictors(), all_outcomes())
+-   Plotted actual vs. predicted emissions to assess model fit.
+
+-   Visualized regression coefficients with confidence intervals to interpret the influence of each emission sector.
+
+```{r}
+# After selecting the variables, clean properly:
+df <- df |> drop_na(ghg_excluding_lucf_per_capita, coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2)
+
+# Now build the model
+lm_model <- lm(ghg_excluding_lucf_per_capita ~ coal_co2 + oil_co2 + gas_co2 + cement_co2 + other_industry_co2, data = df)
+
+# Now add predictions
+df$predicted <- predict(lm_model)
+
+# Now plot Actual vs Predicted
+ggplot(df, aes(x = ghg_excluding_lucf_per_capita, y = predicted, color = country)) +
+  geom_point(size = 2) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  labs(title = "Actual vs Predicted GHG per Capita",
+       x = "Actual GHG per Capita",
+       y = "Predicted GHG per Capita") +
+  theme_minimal()
 
 ```
 
-### Histograms of the data for normality
-
-```{r, echo = TRUE}
-#make a modeltime table to make a modeltime prediction
-
-#potentially root mean squared error or modeltime_accuracy()
-
-```
-
-
-```{r, echo = TRUE}
-#test the data for trends
-
-#test the data for noise (lecture 21)
-
-
-```
-
-```{r, echo = TRUE}
-# making a timeseries recipe
-
-
-```
-
-```{r, echo = TRUE}
-# looking for significant difference in emissions per capita excluding land use change before, during, and after covid
-
-
-```
-
-```{r, echo = TRUE}
-# looking for significant difference in transportation emissions between countries
-
-
-#looking for signfiicant difference in industrial emissions between countries
-
-```
-
-```{r, echo = TRUE}
-compare per capita most emissions to countries with highest overall emissions
-
-```
-
-```{r, echo = TRUE}
-#visualize noise
-
-#smooth to reduce noise
-
-```
-
-```{r, echo = TRUE}
-
-
-
-```
-
-```{r, echo = TRUE}
-
-
-
-```
+This graph compares the real emissions to the ones predicted by our model. If the points are close to the dashed line, it means the model did a good job. Most of the points are pretty close to the line, so the model worked well.
