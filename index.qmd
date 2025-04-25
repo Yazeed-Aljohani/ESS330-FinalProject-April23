@@ -45,7 +45,7 @@ library(tidyr)
 data <- read_csv("data/owid-co2-data (1).csv")
 
 ```
-
+## Narrowing Data to 2015-2022
 ```{r}
 data_filtered <- data |>
   filter(year >= 2015, year <= 2022) |>
@@ -81,6 +81,7 @@ df <- df |>
 
 ```
 
+Per capita ghg emissions top 5 polluters
 ```{r}
 ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = country, group = country)) +
   geom_line() +
@@ -152,24 +153,47 @@ Our reseach focuses on revealing relationships between countries and between pre
 ```{r, echo = TRUE}
 
 #include a table of variables and their meaning (reference df above)
-
+# copy metadata from orig proj to here
+names(df)
 ```
-
+#goal: explainability of certain predictor variables
 
 ```{r, echo = TRUE}
 #loading timeseries packages
 library(tidyverse)
-library(tidymodels)
 library(tsibble)
 library(feasts)
 
-# making a tsibble from cleaned data
+#Make a date column from the year
+df <- df %>% mutate(
 
+# then, making a tsibble from cleaned data
+df_tbl <- as_tsibble(df) #from lecture 21
+head(df_tbl)
 
 ```
 
+## Making a recipe
 ``` {r, echo = TRUE}
+#set a seed
+set.seed(341)
+
 #making a recipe based on timeseries data with relevant predictor variables
+rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year + coal_co2 + oil_co2 + other_industry_co2) %>%
+  # Log transform the predictor variables (aridity and p_mean)
+  step_log(all_predictors()) %>%
+  # Add an interaction term between aridity and p_mean
+  step_interact(terms = ~ aridity:p_mean) |> 
+  # Drop any rows with missing values in the pred
+  step_naomit(all_predictors(), all_outcomes())
+```
+
+### Histograms of the data for normality
+
+```{r, echo = TRUE}
+
+
+#make a modeltime table to make a modeltime prediction
 
 
 ```
@@ -204,13 +228,14 @@ library(feasts)
 ```
 
 ```{r, echo = TRUE}
-
+compare per capita most emissions to countries with highest overall emissions
 
 ```
 
 ```{r, echo = TRUE}
+#visualize noise
 
-
+#smooth to reduce noise
 
 ```
 
