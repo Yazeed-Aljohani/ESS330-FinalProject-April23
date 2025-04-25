@@ -11,7 +11,7 @@ date: 2025-04-24"
 bibliography: references.bib
 keywords: [CO2 emissions, COVID-19, GHG, workflow, ANOVA, sustainability]
 abstract: |
-  This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
+  This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main [response?] variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
 ---
 
 # Introduction, Background, and Motivation
@@ -45,7 +45,7 @@ library(tidyr)
 data <- read_csv("data/owid-co2-data (1).csv")
 
 ```
-
+## Narrowing Data to 2015-2022
 ```{r}
 data_filtered <- data |>
   filter(year >= 2015, year <= 2022) |>
@@ -81,6 +81,7 @@ df <- df |>
 
 ```
 
+Per capita ghg emissions top 5 polluters
 ```{r}
 ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = country, group = country)) +
   geom_line() +
@@ -143,3 +144,124 @@ We filtered the dataset to include:
 -   The top 5 countries based on total GHG emissions (excluding land-use change)
 
 We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.
+
+
+# Methods
+
+Our reseach focuses on revealing relationships between countries and between predictor variables of greenhouse emissions per capita excluding land use. The dataset from Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita. We will be using modeltime to make a timeseries model against which predictor variables can be tested.
+
+```{r, echo = TRUE}
+
+#include a table of variables and their meaning (reference df above)
+# copy metadata from orig proj to here
+names(df)
+```
+#goal: find explainability of certain predictor variables
+
+```{r, echo = TRUE}
+#loading timeseries packages
+library(tidyverse)
+library(tsibble)
+library(feasts)
+library(lubridate)
+library(modeltime)
+
+#Make a date column from the year?
+df <- df %>%  mutate(Date = as.Date(year), index = NULL)
+#lubridate
+ymd(df$year)
+ymd(df$Date)
+
+#format(Sys.Date(), '%Y.%m.%d')
+#df <- df %>%  mutate(Date = Sys.Date())
+#this didn't work; it just added date history
+#I'm on the right track with a date column
+
+#attaching a date string to the year to make the data work within the modeltime package
+df <- df %>%  mutate(date_string = paste0(year, "-12-31"),
+  Date = ymd(date_string))
+
+#Check to see if modeltime requires a tsibble
+# then, making a tsibble from cleaned data
+df_tbl <- as_tsibble(df)
+#from lecture 21
+head(df_tbl)
+```
+
+## Making a recipe
+``` {r, echo = TRUE}
+#set a seed
+set.seed(341)
+
+#making a recipe based on timeseries data with relevant predictor variables
+rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year + coal_co2 + oil_co2 + other_industry_co2) %>%
+  # Log transform the predictor variables (aridity and p_mean)
+  step_log(all_predictors()) %>%
+  # Add an interaction term between aridity and p_mean
+  step_interact(terms = ~ aridity:p_mean) |> 
+  # Drop any rows with missing values in the pred
+  step_naomit(all_predictors(), all_outcomes())
+
+```
+
+### Histograms of the data for normality
+
+```{r, echo = TRUE}
+#make a modeltime table to make a modeltime prediction
+
+#potentially root mean squared error or modeltime_accuracy()
+
+```
+
+
+```{r, echo = TRUE}
+#test the data for trends
+
+#test the data for noise (lecture 21)
+
+
+```
+
+```{r, echo = TRUE}
+# making a timeseries recipe
+
+
+```
+
+```{r, echo = TRUE}
+# looking for significant difference in emissions per capita excluding land use change before, during, and after covid
+
+
+```
+
+```{r, echo = TRUE}
+# looking for significant difference in transportation emissions between countries
+
+
+#looking for signfiicant difference in industrial emissions between countries
+
+```
+
+```{r, echo = TRUE}
+compare per capita most emissions to countries with highest overall emissions
+
+```
+
+```{r, echo = TRUE}
+#visualize noise
+
+#smooth to reduce noise
+
+```
+
+```{r, echo = TRUE}
+
+
+
+```
+
+```{r, echo = TRUE}
+
+
+
+```
