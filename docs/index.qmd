@@ -68,8 +68,6 @@ Selected countries with valid ISO codes and the top 5 CO₂-polluting countries.
 
 Selected key variables: ghg_excluding_lucf_per_capita, coal_co2, oil_co2, gas_co2, cement_co2, and other_industry_co2.
 
-Removed missing data using na.omit().
-
 Created a new variable period to group years into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022).
 
 ### Data Exploration
