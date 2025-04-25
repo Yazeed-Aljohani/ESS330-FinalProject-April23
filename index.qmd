@@ -156,7 +156,7 @@ Our reseach focuses on revealing relationships between countries and between pre
 # copy metadata from orig proj to here
 names(df)
 ```
-#goal: explainability of certain predictor variables
+#goal: find explainability of certain predictor variables
 
 ```{r, echo = TRUE}
 #loading timeseries packages
@@ -164,11 +164,15 @@ library(tidyverse)
 library(tsibble)
 library(feasts)
 
-#Make a date column from the year
-df <- df %>% mutate(
+#Make a date column from the year?
+df <- df %>%  mutate(Date = as.Date(year), index = NULL)
+#lubridate
+
+#format(Sys.Date(), '%Y.%m.%d')
 
 # then, making a tsibble from cleaned data
-df_tbl <- as_tsibble(df) #from lecture 21
+df_tbl <- as_tsibble(df)
+#from lecture 21
 head(df_tbl)
 
 ```
@@ -195,6 +199,8 @@ rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year
 
 #make a modeltime table to make a modeltime prediction
 
+
+#potentially root mean squared error or modeltime_accuracy()
 
 ```
 
