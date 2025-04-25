@@ -126,16 +126,24 @@ ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = coun
 Thise graph shows how greenhouse gas emissions per person changed in China, the United States, India, Russia, and Japan from 2015 to 2022. You can see a drop around 2020 during COVID, especially in the United States and Russia. Some countries' emissions started going back up after 2020.
 
 ```{r}
-df_long <- df |>
+# Pivot longer and remove missing emissions
+df_long <- df |> 
   pivot_longer(cols = c(coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2),
-               names_to = "sector", values_to = "emissions")
+               names_to = "sector", values_to = "emissions") |> 
+  drop_na(emissions)
 
-ggplot(df_long, aes(x = factor(year), y = emissions, color = sector, group = interaction(sector, country))) +
+# Plot
+ggplot(df_long, aes(x = year, y = emissions, color = sector, group = interaction(sector, country))) +
   geom_line() +
   geom_point() +
-  facet_wrap(~ country) +
-  labs(title = "Sector-specific CO₂ Emissions (2015–2022)", x = "Year", y = "Emissions (MtCO₂)") +
-  theme_minimal()
+  facet_wrap(~ country, scales = "free_y", ncol = 2) +  # Make panels wider
+  scale_x_continuous(breaks = 2015:2022) +              # Show all years
+  labs(title = "Sector-specific CO₂ Emissions (2015–2022)", 
+       x = "Year", 
+       y = "Emissions (MtCO₂)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate year labels
+
 
 ```
 
