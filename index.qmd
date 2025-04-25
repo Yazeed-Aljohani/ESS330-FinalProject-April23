@@ -148,7 +148,7 @@ We also created a period variable to group data into pre-COVID (2015–2019), du
 
 # Methods
 
-Our reseach focuses on revealing relationships between countries and between predictor variables of greenhouse emissions per capita excluding land use. The dataset from Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita.
+Our reseach focuses on revealing relationships between countries and between predictor variables of greenhouse emissions per capita excluding land use. The dataset from Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita. We will be using modeltime to make a timeseries model against which predictor variables can be tested.
 
 ```{r, echo = TRUE}
 
@@ -163,18 +163,29 @@ names(df)
 library(tidyverse)
 library(tsibble)
 library(feasts)
+library(lubridate)
+library(modeltime)
 
 #Make a date column from the year?
 df <- df %>%  mutate(Date = as.Date(year), index = NULL)
 #lubridate
+ymd(df$year)
+ymd(df$Date)
 
 #format(Sys.Date(), '%Y.%m.%d')
+#df <- df %>%  mutate(Date = Sys.Date())
+#this didn't work; it just added date history
+#I'm on the right track with a date column
 
+#attaching a date string to the year to make the data work within the modeltime package
+df <- df %>%  mutate(date_string = paste0(year, "-12-31"),
+  Date = ymd(date_string))
+
+#Check to see if modeltime requires a tsibble
 # then, making a tsibble from cleaned data
 df_tbl <- as_tsibble(df)
 #from lecture 21
 head(df_tbl)
-
 ```
 
 ## Making a recipe
@@ -190,15 +201,13 @@ rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year
   step_interact(terms = ~ aridity:p_mean) |> 
   # Drop any rows with missing values in the pred
   step_naomit(all_predictors(), all_outcomes())
+
 ```
 
 ### Histograms of the data for normality
 
 ```{r, echo = TRUE}
-
-
 #make a modeltime table to make a modeltime prediction
-
 
 #potentially root mean squared error or modeltime_accuracy()
 
