@@ -156,37 +156,138 @@ Our reseach focuses on revealing relationships between countries and between pre
 # copy metadata from orig proj to here
 names(df)
 ```
-#goal: find explainability of certain predictor variables
+# primary goal: make a linear model for energy consumption using lm
+
+1. read in csvs of government responses to covid
+
+loading libraries
+```{r, echo = TRUE}
+library(readr)
+library(readxl)
+
+```
+
 
 ```{r, echo = TRUE}
-#loading timeseries packages
-library(tidyverse)
-library(tsibble)
-library(feasts)
-library(lubridate)
-library(modeltime)
+#loading all dataset
+govres <- read_excel("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses2Covid19_last.xlsx", sheet = "Dataset")
 
-#Make a date column from the year?
-df <- df %>%  mutate(Date = as.Date(year), index = NULL)
-#lubridate
-ymd(df$year)
-ymd(df$Date)
+govresdes<- read_excel("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses2Covid19_last.xlsx", sheet = "Description")
 
-#format(Sys.Date(), '%Y.%m.%d')
-#df <- df %>%  mutate(Date = Sys.Date())
-#this didn't work; it just added date history
-#I'm on the right track with a date column
+govres_econ <- read_excel("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses_Sources.xlsx", sheet = "Econ sources")
 
-#attaching a date string to the year to make the data work within the modeltime package
-df <- df %>%  mutate(date_string = paste0(year, "-12-31"),
-  Date = ymd(date_string))
+govres_pubhealth <- read_excel("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses_Sources.xlsx", sheet = "Public health sources")
 
-#Check to see if modeltime requires a tsibble
-# then, making a tsibble from cleaned data
-df_tbl <- as_tsibble(df)
-#from lecture 21
-head(df_tbl)
+#View(govres)
+#View(govres_source)
+#view(govresdes)
+
 ```
+
+
+1.5 colnames to figure out how columns are labeled
+
+```{r, echo = TRUE}
+names(govres)
+
+summary(govres)
+
+View(govres)
+
+```
+
+
+```{r, echo = TRUE}
+# Getting top 5 CO2 emitting countries by total GHG (excluding land use)
+
+#filter to top 5 countries
+
+#need to actually just select for the five most ghg emitting countries
+top_emitters_res <- govres |>
+  group_by(country) |>
+  filter(country %in% c("China", "India", "Russia", "United_States", "Japan"))
+
+# Filtering data to include only those countries and select relevant variables
+df <- top_emitters_res %>% 
+  select(country, date, Rigidity_Public_Health, Economic_Measures)
+
+```
+
+
+```{r, echo = TRUE}
+ggplot(govres, aes(x = factor(date), y = Rigidity_Public_Health, color = country, group = country)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Per Capita GHG Emissions (Excl. Land Use) by Country (2015–2022)",
+    x = "Year", y = "GHG per Capita (tCO₂e)"
+  ) +
+  theme_minimal()
+
+
+```
+
+
+
+
+
+
+
+```{r, echo = TRUE}
+
+#we want a pivoted so we can do faceted graph of each country's economic and social indicators
+
+ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = country, group = country)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Per Capita GHG Emissions (Excl. Land Use) by Country (2015–2022)",
+    x = "Year", y = "Economic Index"
+  ) +
+  theme_minimal()
+
+```
+
+
+
+Facet_Wrap for governmnent COVID rigidity
+```{r, echo = TRUE}
+
+df_long <- df |>
+  pivot_longer(cols = c(coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2),
+               names_to = "sector", values_to = "emissions")
+
+ggplot(df_long, aes(x = factor(year), y = emissions, color = sector, group = interaction(sector, country))) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ country) +
+  labs(title = "Sector-specific CO₂ Emissions (2015–2022)", x = "Year", y = "Emissions (MtCO₂)") +
+  theme_minimal()
+
+```
+
+
+
+
+
+2.1 look in colnames for energy consumption by sector or any indication. describe what energy metrics are present.
+
+2.5: look on the our world in data dataset for graphs about energy usage by countries (link in the email)
+
+2.5 if there is a graph, see if there's a faceted graph for main sectors of energy consumption (if data are available). If so, go on to step 4. If not, go to step 3.
+
+3.  make ANOVA for energy consumption graphs, showing the top energy consuming sectors for the top 5 highest ghg emitting countries and top 5 highest energy consumers to see if there's a significant difference in averages over time
+
+Look at lab 4 for ANOVA, edit code to reflect dataset
+
+4.  energy consumption vs goverment responses to COVID linear model (is there a trend?)
+look at lab 6 for lm and daily activity?
+
+5. primary goal: make a ML model for energy consumption based on lab 6
+government responses to COVID as a variable in ML model
+
+
+
 
 ## Making a recipe
 ``` {r, echo = TRUE}
@@ -207,30 +308,20 @@ rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year
 ### Histograms of the data for normality
 
 ```{r, echo = TRUE}
-#make a modeltime table to make a modeltime prediction
-
-#potentially root mean squared error or modeltime_accuracy()
 
 ```
 
 
 ```{r, echo = TRUE}
-#test the data for trends
+#te
+```
 
-#test the data for noise (lecture 21)
+```{r, echo = TRUE}
 
 
 ```
 
 ```{r, echo = TRUE}
-# making a timeseries recipe
-
-
-```
-
-```{r, echo = TRUE}
-# looking for significant difference in emissions per capita excluding land use change before, during, and after covid
-
 
 ```
 
@@ -243,7 +334,7 @@ rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year
 ```
 
 ```{r, echo = TRUE}
-compare per capita most emissions to countries with highest overall emissions
+#compare per capita most emissions to countries with highest overall emissions
 
 ```
 
