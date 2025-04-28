@@ -12,6 +12,9 @@ bibliography: references.bib
 keywords: [CO2 emissions, COVID-19, GHG, workflow, ANOVA, sustainability]
 abstract: |
   This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using `ghg_excluding_lucf_per_capita` as the main [response?] variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.
+format:
+  html:
+    code-fold: true
 ---
 
 # Introduction, Background, and Motivation
@@ -370,12 +373,10 @@ ggplot(df3, aes(x = factor(year), y = co2_per_unit_energy, color = country, grou
   geom_line() +
   geom_point() +
   labs(
-    title = " 2015 - 2022 CO2 per unit energy emissions",
-    subtitle = "Top 5 countries with greatest cumulative CO2 emissions",
+    title = " 2015 - 2022 CO2 per unit energy emissions",,
     x = "Year", y = "CO2 produced per unit energy"
   ) +
   theme_minimal()
-
 
 ```
 
@@ -402,6 +403,8 @@ flextable::flextable(dplyr::select(normspub2, country, n, statistic, p.value)) |
 ANOVA for co2 emissions per unit energy
 
 ```{r, echo = TRUE}
+library(ggpubr)
+
 res_aov <- aov(formula = co2_per_unit_energy ~ country, data = df3)
 
 #making sure residuals have a normal distribution
@@ -452,7 +455,7 @@ set.seed(341)
 
 #doing a correlation test for variables
 
-cor.test <- data_filtered %>% 
+ghg_per_eny <- data_filtered %>% 
   mutate(period = case_when(
     year <= 2019 ~ "pre_covid",
     year == 2020 ~ "during_covid",
@@ -461,75 +464,87 @@ cor.test <- data_filtered %>%
   group_by(country) %>% 
   mutate(gdp_percap = gdp/population) %>% 
   ungroup() %>% 
-select(share_global_luc_co2,
+select(co2_per_unit_energy, share_global_luc_co2,
 gas_co2_per_capita, oil_co2_per_capita, gdp_percap, coal_co2_per_capita, share_global_coal_co2, cumulative_luc_co2, share_global_luc_co2) %>%
   drop_na
 
-
-  cor(cor.test)
+cor(ghg_per_eny)
 
 ```
 
-Checking distribution of variables
-```{r, echo = TRUE}
-gghistogram(log(cor.test$share_global_luc_co2))
-```
-
-```{r, echo = TRUE}
-gghistogram(log(cor.test$gas_co2_per_capita))
-```
-
-```{r, echo = TRUE}
-gghistogram(log(cor.test$oil_co2_per_capita))
-```
-
-```{r, echo = TRUE}
-gghistogram(log(cor.test$gdp_percap))
-```
-
-```{r, echo = TRUE}
-gghistogram(log(cor.test$coal_co2_per_capita))
-```
-
-```{r, echo = TRUE}
-gghistogram(log(cor.test$share_global_coal_co2))
-```
-
-```{r, echo = TRUE}
-gghistogram(cor.test$cumulative_luc_co2)
-```
-
-```{r, echo = TRUE}
-gghistogram(cor.test$share_global_luc_co2)
-```
-
-
-#making a recipe to predict co2_per_unit_energy
+## making testing and training data for energy consumption
 
 ```{r, echo = TRUE}
 #find recipe format from lab 6 / model daily assignments
+library(rsample)
+
+set.seed(325)
+
+ghg_per_eny_split <- initial_split(ghg_per_eny, prop = .8)
+ghg_per_eny_train <- training(ghg_per_eny_split)
+ghg_per_eny_test  <- testing(ghg_per_eny_split)
 
 
-
-#attempted recipe format
-rec_energy <- cor.test %>% recipe(share_global_luc_co2,
-gas_co2_per_capita, oil_co2_per_capita, gdp_percap, coal_co2_per_capita, share_global_coal_co2, cumulative_luc_co2, share_global_luc_co2) %>%
-  # Log transform the predictor variables (aridity and p_mean)
-  step_log(all_predictors()) %>%
-  # Drop any rows with missing values in the pred
-  step_naomit(all_predictors(), all_outcomes()) %>%
-    step_filter(
-    all_predictors() > (quantile(cor.test$all_predictors(), 0.25) - 1.5 * IQR(cor.test$all_predictors())),
-    all_predictors() < (quantile(cor.test$all_predictors(), 0.75) + 1.5 * IQR(cor.test$all_predictors()))
-  )
-
+ghg_per_eny_cv <- vfold_cv(ghg_per_eny, v = 10)
 ```
 
-
-
-### Histograms of the data for normality
+Making a recipe
 
 ```{r, echo = TRUE}
+#attempted recipe format
+library(recipes)
+
+rec_energy <- recipe(co2_per_unit_energy ~
+gas_co2_per_capita + oil_co2_per_capita + gdp_percap + coal_co2_per_capita + share_global_coal_co2 + cumulative_luc_co2 + share_global_luc_co2, data = ghg_per_eny) %>%
+  step_naomit(all_predictors(), all_outcomes())
+
+#ok, it's not worth logging any of these predictors because the models I'm making don't require normal distributions
+```
+
+Making the models
+```{r, echo = TRUE}
+#making the models
+library(parsnip)
+
+boost <- boost_tree() %>%
+  # define the engine
+  set_engine("xgboost") %>%
+  # define the mode
+  set_mode("regression")
+
+nnet <- bag_mlp() %>%
+  # define the engine
+  set_engine("nnet") %>%
+  # define the mode
+  set_mode("regression")
+
+dtree <- decision_tree() %>%
+  # define the engine
+  set_engine("rpart") %>%
+  # define the mode
+  set_mode("regression")
+
+rf <- rand_forest() %>%
+  # define the engine
+  set_engine("ranger") %>%
+  # define the mode
+  set_mode("regression")
+```
+
+Workflowset
+```{r, echo = TRUE}
+library(workflowsets)
+library(baguette)
+
+wf <-  workflow_set(list(rec_energy), 
+                  list(boost,
+                       nnet,
+                       dtree,
+                       rf))
+
+ workflow_map(wf, resamples = ghg_per_eny_cv)
 
 ```
+
+
 
