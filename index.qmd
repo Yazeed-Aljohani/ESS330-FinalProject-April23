@@ -44,6 +44,8 @@ library(tidyr)
 
 data <- read_csv("data/owid-co2-data (1).csv")
 
+meta <- read_csv("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/owid-co2-codebook (1).csv")
+
 ```
 ## Narrowing Data to 2015-2022
 ```{r}
@@ -53,7 +55,8 @@ data_filtered <- data |>
 ```
 
 ```{r}
-# Getting top 5 CO2 emitting countries by total GHG (excluding land use)
+# Getting top 5 CO2 emitting countries by total GHG (excluding land use)- This is total cumulative ghg emissions
+
 top_emitters <- data_filtered |>
   group_by(country) |>
   summarise(total_ghg = sum(total_ghg_excluding_lucf, na.rm = TRUE)) |>
@@ -205,78 +208,233 @@ View(govres)
 #need to actually just select for the five most ghg emitting countries
 top_emitters_res <- govres |>
   group_by(country) |>
-  filter(country %in% c("China", "India", "Russia", "United_States", "Japan"))
+  filter(country %in% c("China", "India", "Russia", "United States of America", "Japan"))
 
 # Filtering data to include only those countries and select relevant variables
-df <- top_emitters_res %>% 
-  select(country, date, Rigidity_Public_Health, Economic_Measures)
-
+df2 <- top_emitters_res %>% 
+  select(country, date, Rigidity_Public_Health, Economic_Measures) %>% 
+  mutate(Public = as.numeric(Rigidity_Public_Health)) %>% 
+  mutate(Economic = as.numeric(Economic_Measures)) %>% 
+  select(!c(Rigidity_Public_Health, Economic_Measures))
 ```
 
-
 ```{r, echo = TRUE}
-ggplot(govres, aes(x = factor(date), y = Rigidity_Public_Health, color = country, group = country)) +
-  geom_line() +
-  geom_point() +
-  labs(
-    title = "Per Capita GHG Emissions (Excl. Land Use) by Country (2015–2022)",
-    x = "Year", y = "GHG per Capita (tCO₂e)"
+df2_long <- df2 |>
+  pivot_longer(cols = c(Public, Economic),
+               names_to = "Restriction", values_to = "Rigidity") %>% 
+  mutate(Date = as.Date(date))
+
+#making a faceted plot
+ggplot(df2_long, aes(x = Date, y = Rigidity, color = Restriction, group = interaction(Restriction, country))) +
+    theme(
+    axis.text.x = element_text(size = 6, angle = 60, hjust = 1),  # Remove extra comma here
+    plot.margin = margin(t = 10, r = 10, b = 60, l = 10)
   ) +
-  theme_minimal()
-
-
-```
-
-
-
-
-
-
-
-```{r, echo = TRUE}
-
-#we want a pivoted so we can do faceted graph of each country's economic and social indicators
-
-ggplot(df, aes(x = factor(year), y = ghg_excluding_lucf_per_capita, color = country, group = country)) +
-  geom_line() +
-  geom_point() +
-  labs(
-    title = "Per Capita GHG Emissions (Excl. Land Use) by Country (2015–2022)",
-    x = "Year", y = "Economic Index"
-  ) +
-  theme_minimal()
-
-```
-
-
-
-Facet_Wrap for governmnent COVID rigidity
-```{r, echo = TRUE}
-
-df_long <- df |>
-  pivot_longer(cols = c(coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2),
-               names_to = "sector", values_to = "emissions")
-
-ggplot(df_long, aes(x = factor(year), y = emissions, color = sector, group = interaction(sector, country))) +
+  scale_x_date(date_labels = "%b %Y", 
+               date_breaks = "3 months") +
+  scale_y_continuous(limits = c(0, 1)) +
   geom_line() +
   geom_point() +
   facet_wrap(~ country) +
-  labs(title = "Sector-specific CO₂ Emissions (2015–2022)", x = "Year", y = "Emissions (MtCO₂)") +
+  labs(title = "Restrictions During COVID's Lockdown", x = "Date", y = "Restriction Index") +
   theme_minimal()
+ 
+
+ggsave("countryrestrict.pdf", plot = last_plot(), path = "C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/docs", width = 12, height = 6)
+```
+
+Seeing if economic and public restrictions were statistically different
+```{r, echo = TRUE}
+
+library(car)
+
+#shapiro test for Public restrictions
+normspub <- df2 |> 
+  nest(data = -country) |>
+  mutate(
+    Shapiro = map(data, ~ shapiro.test(na.omit(.x$Public))),  # Remove NAs before applying shapiro.test
+    n = map_dbl(data, nrow),
+    glance_shapiro = map(Shapiro, broom::glance)
+  ) |>
+  unnest(glance_shapiro)
+
+flextable::flextable(dplyr::select(normspub, country, n, statistic, p.value)) |>
+  flextable::set_caption("Shapiro-Wilk normality test for restrictions in each country")
+#the public restriction dates of lockdown are not normally distributed
+
+#testing economic restrictions
+normsec <- df2 |> 
+  nest(data = -country) |>
+  mutate(
+    Shapiro = map(data, ~ shapiro.test(na.omit(.x$Economic))),  # Remove NAs before applying shapiro.test
+    n = map_dbl(data, nrow),
+    glance_shapiro = map(Shapiro, broom::glance)
+  ) |>
+  unnest(glance_shapiro)
+
+flextable::flextable(dplyr::select(normsec, country, n, statistic, p.value)) |>
+  flextable::set_caption("Shapiro-Wilk normality test for restrictions in each country")
+#economic restriction dates aren't normally distributed either
+```
+
+```{r, echo = TRUE}
+#testing for statistical significance in differences between indices for how countries handled the lockdown
+
+kruskal.test(Public ~ country, data = df2)
+
+kruskal.test(Economic ~ country, data = df2)
 
 ```
 
+post-hoc test to see which ones are different
 
+```{r, echo = TRUE}
+# using Dunn's test to see which variables are different
+library(dunn.test)
 
+# Perform Dunn's Test for pairwise comparisons
+dunn.test(df2$Public, g = df2$country)
+
+dunn.test(df2$Economic, g = df2$country)
+
+```
+Results:
+The United States has significantly lower public restrictions than every other country except China. For further exploration, make a table of the number of days each type of lockdown took place in the US and China to compare. You would likely have to pivot df2. The difference in economic restriction indices was the same in each country.
 
 
 2.1 look in colnames for energy consumption by sector or any indication. describe what energy metrics are present.
 
-2.5: look on the our world in data dataset for graphs about energy usage by countries (link in the email)
+Proportion of CO2 emitted by top 5 countries in 2022
 
-2.5 if there is a graph, see if there's a faceted graph for main sectors of energy consumption (if data are available). If so, go on to step 4. If not, go to step 3.
+```{r, echo = TRUE}
+#for all greenhouse gases
 
-3.  make ANOVA for energy consumption graphs, showing the top energy consuming sectors for the top 5 highest ghg emitting countries and top 5 highest energy consumers to see if there's a significant difference in averages over time
+total_emissions <- data %>% 
+  select(total_ghg, year, country, iso_code) %>%
+  filter(!is.na(iso_code)) %>% 
+  group_by(country, na.rm = TRUE) %>% 
+  filter(year == 2022) %>% 
+  ungroup()
+
+#in the five most polluting countries
+totem1 <- total_emissions %>% 
+  filter(country %in% c("United States", "China", "India", "Japan", "Russia")) %>% 
+  summarize(sum(total_ghg))
+
+#in the rest of the world
+totem2 <- total_emissions %>% 
+  filter(!country %in% c("United States", "China", "India", "Japan", "Russia")) %>% 
+  summarize(sum(total_ghg, na.rm = TRUE))
+
+27168.36 / (27168.36 + 26138.06)
+
+```
+```{r, echo = TRUE}
+#for co2_excluding_luc_per_capita
+
+percap_emissions <- data %>% 
+  select(ghg_excluding_lucf_per_capita, year, country, iso_code) %>%
+  filter(!is.na(iso_code)) %>% 
+  group_by(country, na.rm = TRUE) %>% 
+  filter(year == 2022) %>% 
+  ungroup()
+
+#in the five most polluting countries
+totemcap1 <- percap_emissions %>% 
+  filter(country %in% c("United States", "China", "India", "Japan", "Russia")) %>% 
+  summarize(mean(ghg_excluding_lucf_per_capita))
+
+#in the rest of the world
+totemcap2 <- percap_emissions %>% 
+  filter(!country %in% c("United States", "China", "India", "Japan", "Russia")) %>% 
+  summarize(mean(ghg_excluding_lucf_per_capita, na.rm = TRUE))
+```
+
+Results
+The top five biggest co2 emitted of the world emitted a total of 27168.36 million metric tons of greenhouse gases in 2022. That year, the other 213 countries emitted metric tons of greenhouse gasses, meaning 50.97 percent of greenhouse gas emissions come from the top 5 most polluting countries. The mean emissions per capita in the top 5 biggest greenhouse gas emitters was 10.45 CO2 equivalents versus a mean of only 5.59 CO2 equivalents for the rest of the countries.
+
+Making a faceted plot of carbon intensity of energy production for each of the 5 biggest ghg emitters
+
+```{r, echo = TRUE}
+#co2_per_unit_energy
+ 
+df3 <- data_filtered %>% 
+  group_by(country) %>% 
+  filter(country %in% c("China", "India", "Russia", "United States", "Japan")) %>%
+  select(country, year, co2_per_unit_energy,
+         ghg_excluding_lucf_per_capita) %>% 
+  mutate(percap = ghg_excluding_lucf_per_capita, energy = co2_per_unit_energy)
+
+
+ggplot(df3, aes(x = factor(year), y = co2_per_unit_energy, color = country, group = country)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = " 2015 - 2022 CO2 per unit energy emissions",
+    subtitle = "Top 5 countries with greatest cumulative CO2 emissions",
+    x = "Year", y = "CO2 produced per unit energy"
+  ) +
+  theme_minimal()
+
+
+```
+
+3.  make ANOVA for energy consumption for the top 5 highest ghg emitting countries and top 5 highest energy consumers to see if there's a significant difference in averages over time
+
+```{r, echo = TRUE}
+#shapiro test for Public restrictions
+normspub2 <- df3 |> 
+  nest(data = -country) |>
+  mutate(
+    Shapiro = map(data, ~ shapiro.test(na.omit(.x$energy))),  # Remove NAs before applying shapiro.test
+    n = map_dbl(data, nrow),
+    glance_shapiro = map(Shapiro, broom::glance)
+  ) |>
+  unnest(glance_shapiro)
+
+flextable::flextable(dplyr::select(normspub2, country, n, statistic, p.value)) |>
+  flextable::set_caption("Shapiro-Wilk normality test for energy consumption in each country")
+
+#This table is giving normal distribution for the p-values, so we'll do ANOVA
+
+```
+
+ANOVA for co2 emissions per unit energy
+
+```{r, echo = TRUE}
+res_aov <- aov(formula = co2_per_unit_energy ~ country, data = df3)
+
+#making sure residuals have a normal distribution
+gghistogram(res_aov$residuals)
+
+shapiro.test(res_aov$residuals)
+#p-value is .8234, so the data fit a normal distribution
+```
+
+
+```{r, echo = TRUE}
+library(ggpubr)
+norm_usa <- df3 %>% group_by(country) %>% 
+filter(country == "United States")
+
+gghistogram(norm_usa$energy)
+
+shapiro.test(df3$energy)
+
+#it was strange how high the p-values were for the shapiro.test so I wanted to make a histogram. The USA histogram doesn't appear to have a normal distribution
+
+```
+
+
+p-values from ANOVA
+
+```{r, echo = TRUE}
+summary(aov(formula = co2_per_unit_energy ~ country, data = df3))
+```
+Results:
+
+There is a statistically significant difference (p < 0.000) in CO2 per kilowatt-hour for the top 5 biggest cumulative CO2 emitters.
+
 
 Look at lab 4 for ANOVA, edit code to reflect dataset
 
@@ -287,15 +445,24 @@ look at lab 6 for lm and daily activity?
 government responses to COVID as a variable in ML model
 
 
-
-
-## Making a recipe
+## Predicting CO2 Emissions per unit Energy
 ``` {r, echo = TRUE}
 #set a seed
 set.seed(341)
 
-#making a recipe based on timeseries data with relevant predictor variables
-rec <-  recipe( ghg_excl_lucf_per_capita  ~ gas_co2 + cement_co2 + period + year + coal_co2 + oil_co2 + other_industry_co2) %>%
+#doing a correlation test for variables
+
+data_filtered %>% 
+cor.test(population + coal_co2_per_capita + oil_co2 + land_use_change_co2 + share_global_coal_co2 + share_global_luc + gdp)
+
+
+```
+
+
+
+#making a recipe to predict co2_per_unit_energy
+
+rec <-  recipe(co2_per_unit_energy ~ gas_co2 + cement_co2 + period + year + coal_co2 + oil_co2 + other_industry_co2 ) %>%
   # Log transform the predictor variables (aridity and p_mean)
   step_log(all_predictors()) %>%
   # Add an interaction term between aridity and p_mean
