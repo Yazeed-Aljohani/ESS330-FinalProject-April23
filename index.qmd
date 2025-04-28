@@ -453,10 +453,12 @@ set.seed(341)
 #doing a correlation test for variables
 
 data_filtered %>% 
-cor.test(population + coal_co2_per_capita + oil_co2 + land_use_change_co2 + share_global_coal_co2 + share_global_luc + gdp)
-
+select(population, coal_co2_per_capita, oil_co2, land_use_change_co2, share_global_coal_co2, share_global_luc_co2, gdp) %>%
+  drop_na %>% 
+  cor()
 
 ```
+Results:
 
 
 
@@ -478,48 +480,3 @@ rec <-  recipe(co2_per_unit_energy ~ gas_co2 + cement_co2 + period + year + coal
 
 ```
 
-
-```{r, echo = TRUE}
-#te
-```
-
-```{r, echo = TRUE}
-
-
-```
-
-```{r, echo = TRUE}
-
-```
-
-```{r, echo = TRUE}
-# looking for significant difference in transportation emissions between countries
-
-
-#looking for signfiicant difference in industrial emissions between countries
-
-```
-
-```{r, echo = TRUE}
-#compare per capita most emissions to countries with highest overall emissions
-
-```
-
-```{r, echo = TRUE}
-#visualize noise
-
-#smooth to reduce noise
-
-```
-
-```{r, echo = TRUE}
-
-
-
-```
-
-```{r, echo = TRUE}
-
-
-
-```
