@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="quarto-1.5.57" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+
+<meta name="author" content="Yazeed Aljohani" />
+<meta name="author" content="Josh Puyear" />
+<meta name="author" content="Cade Vanek" />
+<meta name="dcterms.date" content="2025-04-24" />
+<meta name="keywords" content="CO2 emissions, COVID-19, GHG, workflow, ANOVA, sustainability" />
+
+<title>ESS 330 Final Project: Emissions in the Top CO₂ Polluting Countries Before and After COVID-19</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<!-- htmldependencies:E3FAD763 -->
+<script async src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>
+<link href="site_libs/tabwid-1.1.3/tabwid.css" rel="stylesheet" />
+<script src="site_libs/tabwid-1.1.3/tabwid.js"></script>
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <div id="quarto-toc-target"></div>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default toc-left">
+  <div class="quarto-title-banner">
+    <div class="quarto-title column-body">
+      <h1 class="title">ESS 330 Final Project: Emissions in the Top CO₂ Polluting Countries Before and After COVID-19</h1>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+            <div class="quarto-title-meta-author">
+          <div class="quarto-title-meta-heading">Authors</div>
+          <div class="quarto-title-meta-heading">Affiliation</div>
+          
+                <div class="quarto-title-meta-contents">
+            <p class="author">Yazeed Aljohani </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Colorado State University
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Josh Puyear </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Colorado State University
+                      </p>
+                  </div>
+                      <div class="quarto-title-meta-contents">
+            <p class="author">Cade Vanek </p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Colorado State University
+                      </p>
+                  </div>
+                    </div>
+        
+        <div class="quarto-title-meta">
+
+                      
+                <div>
+            <div class="quarto-title-meta-heading">Published</div>
+            <div class="quarto-title-meta-contents">
+              <p class="date">April 24, 2025</p>
+            </div>
+          </div>
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      </div>
+    </div>
+
+    <div>
+      <div class="abstract">
+        <div class="block-title">Abstract</div>
+        <p>This project investigates trends in per capita greenhouse gas (GHG) emissions from the five largest CO2-polluting countries before, during, and after the COVID-19 pandemic. Using <code>ghg_excluding_lucf_per_capita</code> as the main [response?] variable, we analyze patterns in emissions and identify key predictors across sectors (e.g., manufacturing, transport). The study applies workflow modeling and ANOVA to examine emission changes and variation across countries. Results will inform strategies to reduce emissions and guide sustainable policy efforts.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="keywords">
+        <div class="block-title">Keywords</div>
+        <p>CO2 emissions, COVID-19, GHG, workflow, ANOVA, sustainability</p>
+      </div>
+    </div>
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header>
+
+  
+
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction-background-and-motivation" id="toc-introduction-background-and-motivation">Introduction, Background, and Motivation</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration"><strong>Data Exploration</strong></a>
+  <ul>
+  <li><a href="#narrowing-data-to-2015-2022" id="toc-narrowing-data-to-2015-2022">Narrowing Data to 2015-2022</a></li>
+  </ul></li>
+  <li><a href="#methods" id="toc-methods">Methods</a></li>
+  <li><a href="#making-an-energy-consumption-model" id="toc-making-an-energy-consumption-model">Making an energy Consumption Model</a>
+  <ul>
+  <li><a href="#predicting-co2-emissions-per-unit-energy" id="toc-predicting-co2-emissions-per-unit-energy">Predicting CO2 Emissions per unit Energy</a></li>
+  <li><a href="#making-testing-and-training-data-for-energy-consumption" id="toc-making-testing-and-training-data-for-energy-consumption">making testing and training data for energy consumption</a></li>
+  </ul></li>
+  </ul>
+</nav>
+<section id="introduction-background-and-motivation" class="level1">
+<h1>Introduction, Background, and Motivation</h1>
+<p>Climate change remains one of the most urgent global challenges, driven in large part by human greenhouse gas emissions. Among these, carbon dioxide is the most significant. Carbon dioxide is released through many activities such as burning fossil fuels, industrial production, and land-use practices. Even though international efforts like the Paris Agreement have pushed countries to reduce emissions, many continue to show increasing trends. A small group of countries contributes the most emissions globally, both in total and per person. These major contributors include countries like China, the United States, and India <span class="citation" data-cites="friedlingstein2019global">(<a href="#ref-friedlingstein2019global" role="doc-biblioref">Friedlingstein et al., 2019</a>)</span>.</p>
+<p>This project focuses on the five largest carbon dioxide polluting countries: China, the United States, India, Russia, and Japan. These countries are responsible for a significant share of global emissions and reflect a range of economic systems, energy sources, and industrial structures. To allow meaningful comparisons, we center our analysis on greenhouse gas emissions per person, using the variable ghg_excluding_lucf_per_capita. This variable removes land-use change from the emissions total, isolating emissions from industrial activity and fossil fuel use. By using this approach, we can better understand how much pollution is tied to each person’s activity and consumption within each country.</p>
+<p>The COVID-19 pandemic created a global disruption that affected travel, trade, and production. Lockdowns and other restrictions slowed down factories, reduced transportation, and caused shifts in energy use. As a result, global carbon dioxide emissions in 2020 dropped by approximately 5.4 percent, marking the largest single-year decrease in history <span class="citation" data-cites="forster2020current">(<a href="#ref-forster2020current" role="doc-biblioref">Forster et al., 2020</a>)</span>. This sudden drop was mostly due to temporary changes. As countries began reopening in 2021 and 2022, emissions started climbing again.</p>
+<p>Our goal is to analyze how emissions changed in these five countries before, during, and after the pandemic. We look at three main periods: before COVID from 2015 to 2019, the year COVID began in 2020, and the early recovery years from 2021 to 2022. By studying per person emissions during these periods, we can see whether there were real shifts in emissions behavior and whether those shifts continued into recovery. We also want to understand what kinds of emissions changed the most. For example, did transportation-related emissions drop more than industrial ones? Did countries with manufacturing-based economies recover differently than those with service-based ones?</p>
+<p>To explore these questions, we use two main methods. First, we build a workflow model using the tidymodels package in R. This lets us see which emission sources are the strongest predictors of overall greenhouse gas output per person. For example, we compare emissions from coal, oil, gas, cement, and other industry sectors. We also include factors like population and economic output. By analyzing these predictors, we can understand which sources matter most in each country and how they are connected to changes over time. Second, we use ANOVA to test whether the changes in emissions across the three time periods are statistically meaningful. We run this analysis for each country and compare their patterns.</p>
+<p>The reason for focusing on per person emissions is that total emissions alone do not tell the full story. Countries with large populations may seem like major polluters in total, but their emissions per person might be lower than smaller, high-emitting countries. A per person view also reflects differences in daily life, energy use, and infrastructure. This is important for climate policy, because it shows whether emissions are driven by large populations, high-intensity consumption, or both.</p>
+<p>Our analysis helps link data analysis to climate solutions. By identifying what types of emissions dropped the most during the pandemic and which ones came back quickly, we can suggest where to focus efforts. If, for instance, oil-related emissions dropped during lockdowns but then returned quickly, that might show a need for deeper investment in alternative transportation options. If manufacturing emissions remained stable, that could show how industrial processes are harder to change without long-term plans and policies.</p>
+<p>This project is also a chance to make emissions data more relatable. People often hear that emissions went down during the pandemic, but they may not know what caused the change or how long it lasted. By using clear visuals and country comparisons, we can help explain these trends to wider audiences. This is especially important as the world faces increasing climate-related disasters. Understanding emission trends can support smarter planning and better communication around sustainable transitions.</p>
+<p>Lastly, we are motivated by a bigger question: what can we learn from this accidental global experiment? The pandemic gave the world a chance to see what happens when daily life suddenly changes. Some of those changes, like working from home or using less transportation, might become long-term habits. Others may disappear as economies reopen. By analyzing which emission reductions lasted and which faded, we can start to imagine more realistic and effective ways to slow down climate change.</p>
+</section>
+<section id="data-exploration" class="level1">
+<h1><strong>Data Exploration</strong></h1>
+<section id="narrowing-data-to-2015-2022" class="level2">
+<h2>Narrowing Data to 2015-2022</h2>
+<p>Per capita ghg emissions top 5 polluters</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-5-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>
+--- ANOVA for China ---
+            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+period       2 1.2803  0.6402   13.06 0.0103 *
+Residuals    5 0.2451  0.0490                 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+--- ANOVA for India ---
+            Df  Sum Sq  Mean Sq F value Pr(&gt;F)
+period       2 0.04456 0.022280   2.956  0.142
+Residuals    5 0.03769 0.007537               
+
+--- ANOVA for Japan ---
+            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+period       2 1.6155  0.8077   7.299 0.0329 *
+Residuals    5 0.5533  0.1107                 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+--- ANOVA for Russia ---
+            Df Sum Sq Mean Sq F value Pr(&gt;F)  
+period       2 1.3923  0.6961   4.433 0.0781 .
+Residuals    5 0.7852  0.1570                 
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+--- ANOVA for United States ---
+            Df Sum Sq Mean Sq F value  Pr(&gt;F)   
+period       2  4.906  2.4529   21.37 0.00355 **
+Residuals    5  0.574  0.1148                   
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+</div>
+<section id="data-description" class="level4">
+<h4>Data Description</h4>
+<p>We used data from Our World in Data’s greenhouse gas emissions dataset, which compiles country-level data from sources like the Global Carbon Project and BP Statistical Review <span class="citation" data-cites="owid-scaling-up-ai">(<a href="#ref-owid-scaling-up-ai" role="doc-biblioref">Samborska, 2025</a>)</span>. The dataset covers emissions from fossil fuels, industry, and land-use change.</p>
+<p>For this project, we focused on the years 2015 to 2022 and selected the top five CO₂-polluting countries: China, the United States, India, Russia, and Japan. We used variables such as:</p>
+<ul>
+<li><p>ghg_excluding_lucf_per_capita (our main variable),</p></li>
+<li><p>Sector-based emissions: coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2.</p></li>
+</ul>
+</section>
+<section id="data-cleaning" class="level4">
+<h4>Data Cleaning</h4>
+<p>We filtered the dataset to include:</p>
+<ul>
+<li><p>Only rows with valid ISO country codes</p></li>
+<li><p>Only years 2015–2022</p></li>
+<li><p>The top 5 countries based on total GHG emissions (excluding land-use change)</p></li>
+</ul>
+<p>We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.</p>
+</section>
+</section>
+</section>
+<section id="methods" class="level1">
+<h1>Methods</h1>
+<p>Our reseach focuses on revealing relationships between countries and between predictor variables of greenhouse emissions per capita excluding land use. The dataset from Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita. We will be using modeltime to make a timeseries model against which predictor variables can be tested.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#include a table of variables and their meaning (reference df above)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># copy metadata from orig proj to here</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(df)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] &quot;country&quot;                       &quot;year&quot;                         
+[3] &quot;ghg_excluding_lucf_per_capita&quot; &quot;coal_co2&quot;                     
+[5] &quot;gas_co2&quot;                       &quot;oil_co2&quot;                      
+[7] &quot;cement_co2&quot;                    &quot;other_industry_co2&quot;           
+[9] &quot;period&quot;                       </code></pre>
+</div>
+</div>
+</section>
+<section id="making-an-energy-consumption-model" class="level1">
+<h1>Making an energy Consumption Model</h1>
+<ol type="1">
+<li>read in csvs of government responses to covid</li>
+</ol>
+<p>loading libraries</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span></code></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#loading all dataset</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>govres <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses2Covid19_last.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;Dataset&quot;</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>govresdes<span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses2Covid19_last.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;Description&quot;</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>govres_econ <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses_Sources.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;Econ sources&quot;</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>govres_pubhealth <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses_Sources.xlsx&quot;</span>, <span class="at">sheet =</span> <span class="st">&quot;Public health sources&quot;</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#View(govres)</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#View(govres_source)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">#view(govresdes)</span></span></code></pre></div>
+</details>
+</div>
+<p>1.5 colnames to figure out how columns are labeled</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(govres)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] &quot;country&quot;                &quot;geoid&quot;                  &quot;iso&quot;                   
+ [4] &quot;d&quot;                      &quot;school&quot;                 &quot;school_local&quot;          
+ [7] &quot;domestic&quot;               &quot;domestic_local&quot;         &quot;travel&quot;                
+[10] &quot;travel_partial&quot;         &quot;travel_dom&quot;             &quot;travel_dom_partial&quot;    
+[13] &quot;curf&quot;                   &quot;curf_partial&quot;           &quot;mass&quot;                  
+[16] &quot;mass_partial&quot;           &quot;elect&quot;                  &quot;elect_partial&quot;         
+[19] &quot;sport&quot;                  &quot;sport_partial&quot;          &quot;rest&quot;                  
+[22] &quot;rest_local&quot;             &quot;testing&quot;                &quot;testing_narrow&quot;        
+[25] &quot;masks&quot;                  &quot;masks_partial&quot;          &quot;surveillance&quot;          
+[28] &quot;surveillance_partial&quot;   &quot;state&quot;                  &quot;state_partial&quot;         
+[31] &quot;cash&quot;                   &quot;wage&quot;                   &quot;credit&quot;                
+[34] &quot;taxc&quot;                   &quot;taxd&quot;                   &quot;export&quot;                
+[37] &quot;rate&quot;                   &quot;Rigidity_Public_Health&quot; &quot;Economic_Measures&quot;     
+[40] &quot;date&quot;                   &quot;id&quot;                    </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(govres)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>   country             geoid               iso                 d            
+ Length:110973      Length:110973      Length:110973      Length:110973     
+ Class :character   Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+                                                                            
+                                                                            
+                                                                            
+                                                                            
+     school        school_local       domestic      domestic_local  
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :1.0000   Median :0.0000   Median :0.0000   Median :0.0000  
+ Mean   :0.5363   Mean   :0.2225   Mean   :0.1728   Mean   :0.1043  
+ 3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.0000   3rd Qu.:0.0000  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+ NA&#39;s   :1472     NA&#39;s   :1472                                      
+     travel       travel_partial     travel_dom     travel_dom_partial
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000    
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000    
+ Median :1.0000   Median :0.0000   Median :0.0000   Median :0.0000    
+ Mean   :0.6829   Mean   :0.4131   Mean   :0.2675   Mean   :0.1805    
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.0000    
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000    
+                                                                      
+      curf         curf_partial          mass         mass_partial   
+ Min.   :0.0000   Min.   :0.00000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.0000   Median :0.00000   Median :1.0000   Median :0.0000  
+ Mean   :0.3068   Mean   :0.08322   Mean   :0.6947   Mean   :0.1014  
+ 3rd Qu.:1.0000   3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:0.0000  
+ Max.   :1.0000   Max.   :1.00000   Max.   :1.0000   Max.   :1.0000  
+                                                                     
+   elect         elect_partial       sport       sport_partial   
+ Mode :logical   Mode :logical   Min.   :0.000   Min.   :0.0000  
+ FALSE:7633      FALSE:15035     1st Qu.:0.000   1st Qu.:0.0000  
+ TRUE :25546     TRUE :18144     Median :1.000   Median :0.0000  
+ NA&#39;s :77794     NA&#39;s :77794     Mean   :0.601   Mean   :0.2393  
+                                 3rd Qu.:1.000   3rd Qu.:0.0000  
+                                 Max.   :1.000   Max.   :1.0000  
+                                                                 
+      rest          rest_local       testing       testing_narrow   
+ Min.   :0.0000   Min.   :0.000   Min.   :0.0000   Min.   :0.00000  
+ 1st Qu.:0.0000   1st Qu.:0.000   1st Qu.:0.0000   1st Qu.:0.00000  
+ Median :1.0000   Median :0.000   Median :0.0000   Median :0.00000  
+ Mean   :0.5184   Mean   :0.362   Mean   :0.1025   Mean   :0.06201  
+ 3rd Qu.:1.0000   3rd Qu.:1.000   3rd Qu.:0.0000   3rd Qu.:0.00000  
+ Max.   :1.0000   Max.   :1.000   Max.   :1.0000   Max.   :1.00000  
+                                                                    
+     masks        masks_partial     surveillance    surveillance_partial
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000      
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000      
+ Median :1.0000   Median :0.0000   Median :0.0000   Median :0.0000      
+ Mean   :0.5254   Mean   :0.1531   Mean   :0.2528   Mean   :0.1649      
+ 3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:0.0000      
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000      
+                                                                        
+     state        state_partial         cash             wage       
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :0.0000   Median :0.0000   Median :0.0000   Median :0.0000  
+ Mean   :0.3535   Mean   :0.0323   Mean   :0.4431   Mean   :0.4037  
+ 3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
+ Max.   :1.0000   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+                                                                    
+     credit            taxc             taxd            export       
+ Min.   :0.0000   Min.   :0.0000   Min.   :0.0000   Min.   :0.00000  
+ 1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.00000  
+ Median :0.0000   Median :0.0000   Median :0.0000   Median :0.00000  
+ Mean   :0.4907   Mean   :0.3068   Mean   :0.3246   Mean   :0.08206  
+ 3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:0.00000  
+ Max.   :1.0000   Max.   :1.0000   Max.   :2.0000   Max.   :1.00000  
+                                                                     
+      rate       Rigidity_Public_Health Economic_Measures 
+ Min.   :0.000   Length:110973          Length:110973     
+ 1st Qu.:0.000   Class :character       Class :character  
+ Median :0.000   Mode  :character       Mode  :character  
+ Mean   :0.332                                            
+ 3rd Qu.:1.000                                            
+ Max.   :1.000                                            
+                                                          
+      date                          id           
+ Min.   :2020-01-01 00:00:00   Length:110973     
+ 1st Qu.:2020-05-15 00:00:00   Class :character  
+ Median :2020-09-20 00:00:00   Mode  :character  
+ Mean   :2020-09-20 02:11:53                     
+ 3rd Qu.:2021-01-27 00:00:00                     
+ Max.   :2021-06-04 00:00:00                     
+ NA&#39;s   :1426                                    </code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(govres)</span></code></pre></div>
+</details>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-13-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Seeing if economic and public restrictions were statistically different</p>
+<div class="cell">
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-e79dd76e{}.cl-e794cba6{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e7989236{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e7989240{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e798b464{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e798b46e{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e798b46f{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e798b478{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e798b479{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e798b482{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-e79dd76e'><thead><tr style="overflow-wrap:break-word;"><th class="cl-e798b464"><p class="cl-e7989236"><span class="cl-e794cba6">country</span></p></th><th class="cl-e798b46e"><p class="cl-e7989240"><span class="cl-e794cba6">n</span></p></th><th class="cl-e798b46e"><p class="cl-e7989240"><span class="cl-e794cba6">statistic</span></p></th><th class="cl-e798b46e"><p class="cl-e7989240"><span class="cl-e794cba6">p.value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e798b46f"><p class="cl-e7989236"><span class="cl-e794cba6">China</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">521</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.7140077</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.00000000000000000000000000007276880219</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e798b46f"><p class="cl-e7989236"><span class="cl-e794cba6">India</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">521</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.6312080</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.00000000000000000000000000000006443471</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e798b46f"><p class="cl-e7989236"><span class="cl-e794cba6">Japan</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">521</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.9335874</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.00000000000001859985352188436037723651</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e798b46f"><p class="cl-e7989236"><span class="cl-e794cba6">Russia</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">521</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.8302978</span></p></td><td class="cl-e798b478"><p class="cl-e7989240"><span class="cl-e794cba6">0.00000000000000000000004190057782746653</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e798b479"><p class="cl-e7989236"><span class="cl-e794cba6">United States of America</span></p></td><td class="cl-e798b482"><p class="cl-e7989240"><span class="cl-e794cba6">521</span></p></td><td class="cl-e798b482"><p class="cl-e7989240"><span class="cl-e794cba6">0.6186642</span></p></td><td class="cl-e798b482"><p class="cl-e7989240"><span class="cl-e794cba6">0.00000000000000000000000000000002486007</span></p></td></tr></tbody></table></div>
+</div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-e7ba371a{}.cl-e7b0905c{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e7b4179a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e7b417a4{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e7b437d4{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7b437de{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7b437df{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7b437e8{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7b437e9{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e7b437f2{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-e7ba371a'><thead><tr style="overflow-wrap:break-word;"><th class="cl-e7b437d4"><p class="cl-e7b4179a"><span class="cl-e7b0905c">country</span></p></th><th class="cl-e7b437de"><p class="cl-e7b417a4"><span class="cl-e7b0905c">n</span></p></th><th class="cl-e7b437de"><p class="cl-e7b417a4"><span class="cl-e7b0905c">statistic</span></p></th><th class="cl-e7b437de"><p class="cl-e7b417a4"><span class="cl-e7b0905c">p.value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e7b437df"><p class="cl-e7b4179a"><span class="cl-e7b0905c">China</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">521</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.3847361</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.00000000000000000000000000000000000001491383</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7b437df"><p class="cl-e7b4179a"><span class="cl-e7b0905c">India</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">521</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.5660964</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.00000000000000000000000000000000059191545477</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7b437df"><p class="cl-e7b4179a"><span class="cl-e7b0905c">Japan</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">521</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.5591909</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.00000000000000000000000000000000037233102278</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7b437df"><p class="cl-e7b4179a"><span class="cl-e7b0905c">Russia</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">521</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.6979087</span></p></td><td class="cl-e7b437e8"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.00000000000000000000000000001652274757775360</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e7b437e9"><p class="cl-e7b4179a"><span class="cl-e7b0905c">United States of America</span></p></td><td class="cl-e7b437f2"><p class="cl-e7b417a4"><span class="cl-e7b0905c">521</span></p></td><td class="cl-e7b437f2"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.4565808</span></p></td><td class="cl-e7b437f2"><p class="cl-e7b417a4"><span class="cl-e7b0905c">0.00000000000000000000000000000000000069767096</span></p></td></tr></tbody></table></div>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#testing for statistical significance in differences between indices for how countries handled the lockdown</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Public <span class="sc">~</span> country, <span class="at">data =</span> df2)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  Public by country
+Kruskal-Wallis chi-squared = 1154.8, df = 4, p-value &lt; 2.2e-16</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(Economic <span class="sc">~</span> country, <span class="at">data =</span> df2)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  Economic by country
+Kruskal-Wallis chi-squared = 1189.2, df = 4, p-value &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>post-hoc test to see which ones are different</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># using Dunn&#39;s test to see which variables are different</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dunn.test)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Perform Dunn&#39;s Test for pairwise comparisons</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dunn.test</span>(df2<span class="sc">$</span>Public, <span class="at">g =</span> df2<span class="sc">$</span>country)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Kruskal-Wallis rank sum test
+
+data: x and group
+Kruskal-Wallis chi-squared = 1154.8228, df = 4, p-value = 0
+
+                           Comparison of x by group                            
+                                (No adjustment)                                
+Col Mean-|
+Row Mean |      China      India      Japan     Russia
+---------+--------------------------------------------
+   India |  -13.02502
+         |    0.0000*
+         |
+   Japan |   19.77441   32.79944
+         |    0.0000*    0.0000*
+         |
+  Russia |   7.398060   20.42308  -12.37635
+         |    0.0000*    0.0000*    0.0000*
+         |
+United S |  -0.342397   12.68262  -20.11681  -7.740458
+         |     0.3660    0.0000*    0.0000*    0.0000*
+
+alpha = 0.05
+Reject Ho if p &lt;= alpha/2</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dunn.test</span>(df2<span class="sc">$</span>Economic, <span class="at">g =</span> df2<span class="sc">$</span>country)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Kruskal-Wallis rank sum test
+
+data: x and group
+Kruskal-Wallis chi-squared = 1189.222, df = 4, p-value = 0
+
+                           Comparison of x by group                            
+                                (No adjustment)                                
+Col Mean-|
+Row Mean |      China      India      Japan     Russia
+---------+--------------------------------------------
+   India |   18.28142
+         |    0.0000*
+         |
+   Japan |   19.78936   1.507937
+         |    0.0000*     0.0658
+         |
+  Russia |   6.583489  -11.69793  -13.20587
+         |    0.0000*    0.0000*    0.0000*
+         |
+United S |  -8.959188  -27.24061  -28.74855  -15.54267
+         |    0.0000*    0.0000*    0.0000*    0.0000*
+
+alpha = 0.05
+Reject Ho if p &lt;= alpha/2</code></pre>
+</div>
+</div>
+<p>Results: The United States has significantly lower public restrictions than every other country except China. For further exploration, make a table of the number of days each type of lockdown took place in the US and China to compare. You would likely have to pivot df2. The difference in economic restriction indices was the same in each country.</p>
+<p>2.1 look in colnames for energy consumption by sector or any indication. describe what energy metrics are present.</p>
+<p>Proportion of CO2 emitted by top 5 countries in 2022</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5096639</code></pre>
+</div>
+</div>
+<p>Results The top five biggest co2 emitted of the world emitted a total of 27168.36 million metric tons of greenhouse gases in 2022. That year, the other 213 countries emitted metric tons of greenhouse gasses, meaning 50.97 percent of greenhouse gas emissions come from the top 5 most polluting countries. The mean emissions per capita in the top 5 biggest greenhouse gas emitters was 10.45 CO2 equivalents versus a mean of only 5.59 CO2 equivalents for the rest of the countries.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="3" type="1">
+<li>make ANOVA for energy consumption for the top 5 highest ghg emitting countries and top 5 highest energy consumers to see if there’s a significant difference in averages over time</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#shapiro test for Public restrictions</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>normspub2 <span class="ot">&lt;-</span> df3 <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nest</span>(<span class="at">data =</span> <span class="sc">-</span>country) <span class="sc">|&gt;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Shapiro =</span> <span class="fu">map</span>(data, <span class="sc">~</span> <span class="fu">shapiro.test</span>(<span class="fu">na.omit</span>(.x<span class="sc">$</span>energy))),  <span class="co"># Remove NAs before applying shapiro.test</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">map_dbl</span>(data, nrow),</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">glance_shapiro =</span> <span class="fu">map</span>(Shapiro, broom<span class="sc">::</span>glance)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unnest</span>(glance_shapiro)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>flextable<span class="sc">::</span><span class="fu">flextable</span>(dplyr<span class="sc">::</span><span class="fu">select</span>(normspub2, country, n, statistic, p.value)) <span class="sc">|&gt;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  flextable<span class="sc">::</span><span class="fu">set_caption</span>(<span class="st">&quot;Shapiro-Wilk normality test for energy consumption in each country&quot;</span>)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-e8400f02{}.cl-e8342a0c{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-e838b32e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e838b342{margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-e839009a{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e83900a4{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e83900ae{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e83900b8{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e83900c2{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-e83900c3{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-e8400f02'><thead><tr style="overflow-wrap:break-word;"><th class="cl-e839009a"><p class="cl-e838b32e"><span class="cl-e8342a0c">country</span></p></th><th class="cl-e83900a4"><p class="cl-e838b342"><span class="cl-e8342a0c">n</span></p></th><th class="cl-e83900a4"><p class="cl-e838b342"><span class="cl-e8342a0c">statistic</span></p></th><th class="cl-e83900a4"><p class="cl-e838b342"><span class="cl-e8342a0c">p.value</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-e83900ae"><p class="cl-e838b32e"><span class="cl-e8342a0c">China</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">8</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.9880975</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.9915808</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e83900ae"><p class="cl-e838b32e"><span class="cl-e8342a0c">India</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">8</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.9287910</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.5051372</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e83900ae"><p class="cl-e838b32e"><span class="cl-e8342a0c">Japan</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">8</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.9407402</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.6183777</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e83900ae"><p class="cl-e838b32e"><span class="cl-e8342a0c">Russia</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">8</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.9249849</span></p></td><td class="cl-e83900b8"><p class="cl-e838b342"><span class="cl-e8342a0c">0.4716001</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-e83900c2"><p class="cl-e838b32e"><span class="cl-e8342a0c">United States</span></p></td><td class="cl-e83900c3"><p class="cl-e838b342"><span class="cl-e8342a0c">8</span></p></td><td class="cl-e83900c3"><p class="cl-e838b342"><span class="cl-e8342a0c">0.9545535</span></p></td><td class="cl-e83900c3"><p class="cl-e838b342"><span class="cl-e8342a0c">0.7569171</span></p></td></tr></tbody></table></div>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#This table is giving normal distribution for the p-values, so we&#39;ll do ANOVA</span></span></code></pre></div>
+</details>
+</div>
+<p>ANOVA for co2 emissions per unit energy</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-21-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  res_aov$residuals
+W = 0.98372, p-value = 0.8234</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  df3$energy
+W = 0.8199, p-value = 1.81e-05</code></pre>
+</div>
+</div>
+<p>p-values from ANOVA</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">aov</span>(<span class="at">formula =</span> co2_per_unit_energy <span class="sc">~</span> country, <span class="at">data =</span> df3))</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Df  Sum Sq  Mean Sq F value Pr(&gt;F)    
+country      4 0.04592 0.011480   297.1 &lt;2e-16 ***
+Residuals   35 0.00135 0.000039                   
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+</div>
+</div>
+<p>Results:</p>
+<p>There is a statistically significant difference (p &lt; 0.000) in CO2 per kilowatt-hour for the top 5 biggest cumulative CO2 emitters.</p>
+<p>Look at lab 4 for ANOVA, edit code to reflect dataset</p>
+<ol start="5" type="1">
+<li>primary goal: make a ML model for energy consumption based on lab 6 government responses to COVID as a variable in ML model</li>
+</ol>
+<section id="predicting-co2-emissions-per-unit-energy" class="level2">
+<h2>Predicting CO2 Emissions per unit Energy</h2>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>                      co2_per_unit_energy share_global_luc_co2
+co2_per_unit_energy            1.00000000          -0.06205943
+share_global_luc_co2          -0.06205943           1.00000000
+gas_co2_per_capita            -0.06469071          -0.04494566
+oil_co2_per_capita            -0.16581272          -0.08168927
+gdp_percap                    -0.34221426          -0.10968576
+coal_co2_per_capita            0.32347237          -0.09014084
+share_global_coal_co2          0.17452910          -0.12193451
+cumulative_luc_co2             0.07446080           0.62811757
+                      gas_co2_per_capita oil_co2_per_capita  gdp_percap
+co2_per_unit_energy         -0.064690709        -0.16581272 -0.34221426
+share_global_luc_co2        -0.044945659        -0.08168927 -0.10968576
+gas_co2_per_capita           1.000000000         0.39609288  0.70568157
+oil_co2_per_capita           0.396092880         1.00000000  0.63852320
+gdp_percap                   0.705681571         0.63852320  1.00000000
+coal_co2_per_capita         -0.058176109         0.08240375  0.12000100
+share_global_coal_co2       -0.042506461        -0.04931556 -0.03492933
+cumulative_luc_co2           0.009423321         0.01041741 -0.04233192
+                      coal_co2_per_capita share_global_coal_co2
+co2_per_unit_energy            0.32347237            0.17452910
+share_global_luc_co2          -0.09014084           -0.12193451
+gas_co2_per_capita            -0.05817611           -0.04250646
+oil_co2_per_capita             0.08240375           -0.04931556
+gdp_percap                     0.12000100           -0.03492933
+coal_co2_per_capita            1.00000000            0.29125356
+share_global_coal_co2          0.29125356            1.00000000
+cumulative_luc_co2             0.14127089            0.41683352
+                      cumulative_luc_co2
+co2_per_unit_energy          0.074460799
+share_global_luc_co2         0.628117570
+gas_co2_per_capita           0.009423321
+oil_co2_per_capita           0.010417412
+gdp_percap                  -0.042331918
+coal_co2_per_capita          0.141270892
+share_global_coal_co2        0.416833519
+cumulative_luc_co2           1.000000000</code></pre>
+</div>
+</div>
+</section>
+<section id="making-testing-and-training-data-for-energy-consumption" class="level2">
+<h2>making testing and training data for energy consumption</h2>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">#find recipe format from lab 6 / model daily assignments</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rsample)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">325</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>ghg_per_eny_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(ghg_per_eny, <span class="at">prop =</span> .<span class="dv">8</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>ghg_per_eny_train <span class="ot">&lt;-</span> <span class="fu">training</span>(ghg_per_eny_split)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>ghg_per_eny_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(ghg_per_eny_split)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>ghg_per_eny_cv <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(ghg_per_eny, <span class="at">v =</span> <span class="dv">10</span>)</span></code></pre></div>
+</details>
+</div>
+<p>Plotting the best predictive models of emissions per unit energy</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(workflowsets)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(baguette)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>wf <span class="ot">&lt;-</span>  <span class="fu">workflow_set</span>(<span class="fu">list</span>(rec_energy), </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">list</span>(boost,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>                       nnet,</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>                       dtree,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                       rf)) <span class="sc">%&gt;%</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow_map</span>(<span class="st">&#39;fit_resamples&#39;</span>, <span class="at">resamples =</span> ghg_per_eny_cv) </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(wf)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-28-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Results:</p>
+<p>The graph shows that random forest is the best model for predicting carbon emissions per unit energy.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rank_results</span>(wf, <span class="at">rank_metric =</span> <span class="st">&quot;rsq&quot;</span>, <span class="at">select_best =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 8 × 9
+  wflow_id         .config .metric   mean std_err     n preprocessor model  rank
+  &lt;chr&gt;            &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;        &lt;chr&gt; &lt;int&gt;
+1 recipe_rand_for… Prepro… rmse    0.0179 1.90e-3    10 recipe       rand…     1
+2 recipe_rand_for… Prepro… rsq     0.915  1.84e-2    10 recipe       rand…     1
+3 recipe_boost_tr… Prepro… rmse    0.0212 1.58e-3    10 recipe       boos…     2
+4 recipe_boost_tr… Prepro… rsq     0.882  1.67e-2    10 recipe       boos…     2
+5 recipe_decision… Prepro… rmse    0.0375 1.40e-3    10 recipe       deci…     3
+6 recipe_decision… Prepro… rsq     0.634  2.31e-2    10 recipe       deci…     3
+7 recipe_bag_mlp   Prepro… rmse    0.0586 9.09e-4    10 recipe       bag_…     4
+8 recipe_bag_mlp   Prepro… rsq     0.123  2.13e-2    10 recipe       bag_…     4</code></pre>
+</div>
+</div>
+<p>The random forest does best in this situation to model ghg emissions per unit energy</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code></pre></div>
+</details>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>rf_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the recipe</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rec_energy) <span class="sc">%&gt;%</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the model</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf) <span class="sc">%&gt;%</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fit the model to the training data</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> ghg_per_eny_train) </span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>rf_data <span class="ot">&lt;-</span> <span class="fu">augment</span>(rf_wf, <span class="at">new_data =</span> ghg_per_eny_test)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(rf_data)</span></code></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 158   9</code></pre>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r cell-code"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co">#finding the most statistically significant predictors</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>rf_model <span class="ot">&lt;-</span> <span class="fu">extract_fit_engine</span>(rf_wf)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(rf_model)</span></code></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure>
+<p><a href="index_files/figure-html/unnamed-chunk-31-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672" /></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Results: The most important variable for predicting CO2 emissions per unit of energy consumption during the the 2015 to 2022 period in the five countries examined was GDP per capita followed by CO2 emitted from gas per capita.</p>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-forster2020current" class="csl-entry" role="listitem">
+Forster, P. M., Forster, H. I., Evans, M. J., Gidden, M. J., Jones, C. D., Keller, C. A., Lamboll, R. D., Le Quéré, C., Rogelj, J., Rosen, D., et al. (2020). Current and future global climate impacts resulting from COVID-19. <em>Nature Climate Change</em>, <em>10</em>(10), 913–919.
+</div>
+<div id="ref-friedlingstein2019global" class="csl-entry" role="listitem">
+Friedlingstein, P., Jones, M. W., O’Sullivan, M., Andrew, R. M., Hauck, J., Peters, G. P., Peters, W., Pongratz, J., Sitch, S., Le Quéré, C., et al. (2019). Global carbon budget 2019. <em>Earth System Science Data</em>, <em>11</em>(4), 1783–1838.
+</div>
+<div id="ref-owid-scaling-up-ai" class="csl-entry" role="listitem">
+Samborska, V. (2025). Scaling up: How increasing inputs has made artificial intelligence more capable. <em>Our World in Data</em>.
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id = "quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"loop":false,"descPosition":"bottom","selector":".lightbox","openEffect":"zoom","closeEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+</body>
+
+</html>
