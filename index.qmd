@@ -37,6 +37,18 @@ This project is also a chance to make emissions data more relatable. People ofte
 
 Lastly, we are motivated by a bigger question: what can we learn from this accidental global experiment? The pandemic gave the world a chance to see what happens when daily life suddenly changes. Some of those changes, like working from home or using less transportation, might become long-term habits. Others may disappear as economies reopen. By analyzing which emission reductions lasted and which faded, we can start to imagine more realistic and effective ways to slow down climate change.
 
+Add to the introduction(Josh):
+
+Energy-related emissions are an important aspect of analyzing CO2 emission changes before and after COVID because demands for energy will continue. Depending on where the five selected countries obtain fuels for energy generation, energy use plays a role in predicting total CO2 emissions for each country and can present opportunities for reductions in emissions. CO2  emitted per kilowatt-hour can provide insight into how much CO2 can be attributed to energy use.
+
+Questions (Josh):
+
+Were government economic and public restrictions the same or different during the lockdown? How does this relate to changing CO2 emissions per capita over time for the five selected countries?
+
+What is the share of CO2  emissions from the top five emitters post COVID?
+
+Which variables explain CO2  emissions per kilowatt-hour for the top five emitters?
+
 # **Data Exploration**
 
 ```{r}
@@ -151,29 +163,36 @@ We filtered the dataset to include:
 
 We also created a period variable to group data into pre-COVID (2015–2019), during COVID (2020), and post-COVID (2021–2022). This helped us compare emissions trends across time. Minimal cleaning was needed beyond this filtering and labeling.
 
+# Methods (Josh)
 
-# Methods
+Our research focuses on revealing relationships between countries and between predictor variables of greenhouse emissions. The dataset from Oxford's Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main response will be ghg_excluding_lucf_per_capita, but other measures of CO2 will also be explored. We will be testing predictor variables with linear regression, neural network, random forest, decision tree, and boost tree models to find predictor variables.
 
-Our reseach focuses on revealing relationships between countries and between predictor variables of greenhouse emissions per capita excluding land use. The dataset from Our World in Data includes emissions levels from the industrial revolution up to 2023 and is a robust dataset. The data are compiled from [sources]. The dataset is publicly posted to https://ourworldindata.org/co2-and-greenhouse-gas-emissions. To compare CO2 emissions before, during, and after the pandemic, we will be using the tidymodels package in R along with dplyr and [other packages]. We will make this comparison by comparing transportation and industrial emissions, then comparing total emissions from five key predictor categories including coal, oil, gas, cement and other. Our main predictor will be ghg_excluding_lucf_per_capita. We will be using modeltime to make a timeseries model against which predictor variables can be tested.
+  Restrictions to public and economic activity during the 2020-2021 COVID lockdown period prevented people from leaving their houses to consume goods and do business, activities that would under normal circumstances indirectly result in more greenhouse gas emissions. This study refers to The Oxford COVID-19 Government Response Tracker (OxCGRT) for public and economic restriction indices in the five focus countries. Differences in average restriction index for each country were tested with ANOVA. We used the ggplot2 package to visualize COVID-19 restrictions as well as visualizing data from the CO2 and Greenhouse Gas emissions data by Ritchie, Rosado and Roser. The proportion of per capita emissions from the top five cumulative CO2  emitting countries to the full record of countries during the 2015-2022 period revealed the impact that these countries can have to curb CO2 emissions in the future. Then, we used CO2 per unit energy emissions in 2015-2022 to illustrate how energy, a constant necessity, contributes to the carbon footprint of these countries. The predictor variables gdp_percap, gas_co2_per_capita, share_global_coal_co2, coal_co2_per_capita, cumulative_luc_co2, oil_co2_per_capita, and share_global_luc_co2 (Table 1) were chosen to model CO2 emissions per unit energy. The ggplot packages rsample, parsnip, baguette, and workflowsets were used to test multiple models over the dataset to build a regression model. The best model was analyzed with the vip package to reveal the most explanatory variables that predicted CO2 emissions per unit energy from the selected variables.
 
+**Table 1.** Predictor variables for CO2 emitted per kilowatt-hour
 ```{r, echo = TRUE}
+meta %>% 
+  filter(column %in% c("gdp_percap", "gas_co2_per_capita", "share_global_coal_co2", "coal_co2_per_capita", "cumulative_luc_co2", "oil_co2_per_capita", "share_global_luc_co2")) %>% 
+  print()
+
+```
+
+
+```{r, echo = FALSE}
 #include a table of variables and their meaning (reference df above)
 # copy metadata from orig proj to here
 names(df)
 ```
-# Making an energy Consumption Model
+## Understanding Public Restrictions
 
-1. read in csvs of government responses to covid
-
-loading libraries
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 library(readr)
 library(readxl)
 
 ```
 
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 #loading all dataset
 govres <- read_excel("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/Gov_Responses2Covid19_last.xlsx", sheet = "Dataset")
 
@@ -189,16 +208,10 @@ govres_pubhealth <- read_excel("C:/Users/Joshua Puyear/Documents/csu-undergrad/e
 
 ```
 
-
-1.5 colnames to figure out how columns are labeled
-
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 names(govres)
 
 summary(govres)
-
-View(govres)
-
 ```
 
 
@@ -244,9 +257,13 @@ ggplot(df2_long, aes(x = Date, y = Rigidity, color = Restriction, group = intera
 
 ggsave("countryrestrict.pdf", plot = last_plot(), path = "C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/docs", width = 12, height = 6)
 ```
+**Figure 1.** Daily COVID lockdown restriction indices (Oxford, 2022), separated by Economic and Public.
 
-Seeing if economic and public restrictions were statistically different
-```{r, echo = TRUE}
+**Public Restriction Indices**
+There is a statistically significant difference (p < 0.000) in both economic and public restriction index for the top 5 biggest cumulative CO2 emitters (Figure 1). The United States has significantly lower public restrictions (p < 0.000) than every other country except China, where its public restrictions are similar (p = .3660).
+
+
+```{r, echo = FALSE}
 library(car)
 
 #shapiro test for Public restrictions
@@ -278,7 +295,9 @@ flextable::flextable(dplyr::select(normsec, country, n, statistic, p.value)) |>
 #economic restriction dates aren't normally distributed either
 ```
 
-```{r, echo = TRUE}
+
+
+```{r, echo = FALSE}
 #testing for statistical significance in differences between indices for how countries handled the lockdown
 
 kruskal.test(Public ~ country, data = df2)
@@ -289,7 +308,7 @@ kruskal.test(Economic ~ country, data = df2)
 
 post-hoc test to see which ones are different
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 # using Dunn's test to see which variables are different
 library(dunn.test)
 # Perform Dunn's Test for pairwise comparisons
@@ -298,14 +317,11 @@ dunn.test(df2$Public, g = df2$country)
 dunn.test(df2$Economic, g = df2$country)
 ```
 Results:
-The United States has significantly lower public restrictions than every other country except China. For further exploration, make a table of the number of days each type of lockdown took place in the US and China to compare. You would likely have to pivot df2. The difference in economic restriction indices was the same in each country.
-
-
-2.1 look in colnames for energy consumption by sector or any indication. describe what energy metrics are present.
+The United States has significantly lower public restrictions (p < 0.000) than every other country except China.
 
 Proportion of CO2 emitted by top 5 countries in 2022
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 #for all greenhouse gases
 total_emissions <- data %>% 
   select(total_ghg, year, country, iso_code) %>%
@@ -327,7 +343,8 @@ totem2 <- total_emissions %>%
 27168.36 / (27168.36 + 26138.06)
 
 ```
-```{r, echo = TRUE}
+
+```{r, echo = FALSE}
 #for co2_excluding_luc_per_capita
 percap_emissions <- data %>% 
   select(ghg_excluding_lucf_per_capita, year, country, iso_code) %>%
@@ -350,6 +367,8 @@ totemcap2 <- percap_emissions %>%
 Results
 The top five biggest co2 emitted of the world emitted a total of 27168.36 million metric tons of greenhouse gases in 2022. That year, the other 213 countries emitted metric tons of greenhouse gasses, meaning 50.97 percent of greenhouse gas emissions come from the top 5 most polluting countries. The mean emissions per capita in the top 5 biggest greenhouse gas emitters was 10.45 CO2 equivalents versus a mean of only 5.59 CO2 equivalents for the rest of the countries.
 
+## CO2 per Unit Energy Modeling
+
 ```{r, echo = TRUE}
 #co2_per_unit_energy
  
@@ -365,16 +384,19 @@ ggplot(df3, aes(x = factor(year), y = co2_per_unit_energy, color = country, grou
   geom_line() +
   geom_point() +
   labs(
-    title = " 2015 - 2022 CO2 per unit energy emissions",,
-    x = "Year", y = "CO2 produced per unit energy"
+    title = " 2015 - 2022 CO2 per kilowatt-hour emissions",,
+    x = "Year", y = "CO2 produced per kwh emissions"
   ) +
   theme_minimal()
 
 ```
+**Figure 2.** CO2 per kilowatt-hour emissions for the top five cumulative emitters.
 
-3.  make ANOVA for energy consumption for the top 5 highest ghg emitting countries and top 5 highest energy consumers to see if there's a significant difference in averages over time
+**Proportion of CO2  emitted by the five selected countries**
+In 2022, India and Russia’s CO2 emissions per kilowatt-hour have risen, while China, the United States, and Japan’s emissions have decreased. (Figure 2.) The top five biggest co2 emitted of the world emitted a total of 27168.36 million metric tons of greenhouse gases in 2022. That year, the other 213 countries emitted metric tons of greenhouse gasses, meaning 50.97 percent of greenhouse gas emissions come from the top 5 most polluting countries. The mean emissions per capita in the top 5 biggest greenhouse gas emitters was 10.45 CO2 equivalents versus a mean of only 5.59 CO2 equivalents for the rest of the countries.
 
-```{r, echo = TRUE}
+
+```{r, echo = FALSE}
 #shapiro test for Public restrictions
 normspub2 <- df3 |> 
   nest(data = -country) |>
@@ -394,10 +416,10 @@ flextable::flextable(dplyr::select(normspub2, country, n, statistic, p.value)) |
 
 ANOVA for co2 emissions per unit energy
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 library(ggpubr)
 
-res_aov <- aov(formula = co2_per_unit_energy ~ country, data = df3)
+s_aov <- aov(formula = co2_per_unit_energy ~ country, data = df3)
 
 #making sure residuals have a normal distribution
 gghistogram(res_aov$residuals)
@@ -407,7 +429,7 @@ shapiro.test(res_aov$residuals)
 ```
 
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 library(ggpubr)
 norm_usa <- df3 %>% group_by(country) %>% 
 filter(country == "United States")
@@ -423,22 +445,17 @@ shapiro.test(df3$energy)
 
 p-values from ANOVA
 
+**Table 2.** Summary statistics of an ANOVA analysis of CO2 emitted per kilowatt-hour for the top 5 cumulative CO2 emitters.
 ```{r, echo = TRUE}
 summary(aov(formula = co2_per_unit_energy ~ country, data = df3))
 ```
-Results:
+**Difference in CO2  per kilowatt-hour emissions between countries**
+There is a statistically significant difference (p < 0.000) in CO2 per kilowatt-hour for the top 5 biggest cumulative CO2 emitters (Table 2). 
 
-There is a statistically significant difference (p < 0.000) in CO2 per kilowatt-hour for the top 5 biggest cumulative CO2 emitters.
-
-
-Look at lab 4 for ANOVA, edit code to reflect dataset
-
-
-5. primary goal: make a ML model for energy consumption based on lab 6
-government responses to COVID as a variable in ML model
 
 ## Predicting CO2 Emissions per unit Energy
-``` {r, echo = TRUE}
+
+``` {r, echo = FALSE}
 #set a seed
 set.seed(341)
 
@@ -463,11 +480,9 @@ cor(ghg_per_eny)
 
 ## making testing and training data for energy consumption
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 #find recipe format from lab 6 / model daily assignments
 library(rsample)
-
-set.seed(325)
 
 ghg_per_eny_split <- initial_split(ghg_per_eny, prop = .8)
 ghg_per_eny_train <- training(ghg_per_eny_split)
@@ -478,7 +493,7 @@ ghg_per_eny_cv <- vfold_cv(ghg_per_eny, v = 10)
 ```
 
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 #attempted recipe format
 library(recipes)
 
@@ -489,7 +504,7 @@ gas_co2_per_capita + oil_co2_per_capita + gdp_percap + coal_co2_per_capita + sha
 #ok, it's not worth logging any of these predictors because the models I'm making don't require normal distributions
 ```
 
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 #making the models
 library(parsnip)
 
@@ -534,20 +549,22 @@ wf <-  workflow_set(list(rec_energy),
 
 autoplot(wf)
 ```
+**Figure 4.** Ranking different models' root mean squared error and R-squared error values, tested against CO2 per kilowatt hour emissions data for the top five cumulative CO2 emitters.
+
 Results:
 
 The graph shows that random forest is the best model for predicting carbon emissions per unit energy.
 
-```{r, echo = TRUE}
 
+**Table 3.** Ranking Model Testing Results
+```{r, echo = TRUE}
 rank_results(wf, rank_metric = "rsq", select_best = TRUE)
 
 ```
 
 The random forest does best in this situation to model ghg emissions per unit energy
 
-
-```{r, echo = TRUE}
+```{r, echo = FALSE}
 library(tidymodels)
 rf_wf <- workflow() %>%
   # Add the recipe
@@ -562,13 +579,15 @@ rf_data <- augment(rf_wf, new_data = ghg_per_eny_test)
 dim(rf_data)
 
 ```
+
+
 ```{r, echo = TRUE}
 #finding the most statistically significant predictors
 rf_model <- extract_fit_engine(rf_wf)
 vip::vip(rf_model)
 
 ```
+**Figure 5.** Ranking importance of each predictor variable at explaining CO2 emissions per kilowatt-hour in the random forest model selected for analysis.
 
-Results: The most important variable for predicting CO2 emissions per unit of energy consumption during the the 2015 to 2022 period in the five countries examined was GDP per capita followed by CO2 emitted from gas per capita.
-
-
+**Predictor variables for CO2  per kilowatt-hour**
+The graph shows that random forest is the best model for predicting carbon emissions per unit energy, with an R-squared of 0.91. (Figure 4). The most explanatory variable for predicting CO2 emissions per unit of energy consumption during the the 2015 to 2022 period in the five countries examined was GDP per capita followed by CO2 emitted from gas per capita (Figure 5).
