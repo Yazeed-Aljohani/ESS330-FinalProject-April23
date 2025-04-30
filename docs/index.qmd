@@ -60,7 +60,7 @@ library(dplyr)
 
 data <- read_csv("data/owid-co2-data (1).csv")
 
-meta <- read_csv("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/owid-co2-codebook (1).csv")
+meta <- read_csv("data/owid-co2-codebook (1).csv")
 
 ```
 ## Narrowing Data to 2015-2022
