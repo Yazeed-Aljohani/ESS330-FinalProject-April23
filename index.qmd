@@ -56,6 +56,7 @@ library(tidyverse)
 library(readr)
 library(ggplot2)
 library(tidyr)
+library(dplyr)
 
 data <- read_csv("data/owid-co2-data (1).csv")
 
@@ -189,7 +190,6 @@ names(df)
 ```{r, echo = FALSE}
 library(readr)
 library(readxl)
-
 ```
 
 
@@ -420,7 +420,7 @@ ANOVA for co2 emissions per unit energy
 ```{r, echo = FALSE}
 library(ggpubr)
 
-s_aov <- aov(formula = co2_per_unit_energy ~ country, data = df3)
+res_aov <- aov(formula = co2_per_unit_energy ~ country, data = df3)
 
 #making sure residuals have a normal distribution
 gghistogram(res_aov$residuals)
@@ -560,7 +560,6 @@ The graph shows that random forest is the best model for predicting carbon emiss
 **Table 3.** Ranking Model Testing Results
 ```{r, echo = TRUE}
 rank_results(wf, rank_metric = "rsq", select_best = TRUE)
-
 ```
 
 The random forest does best in this situation to model ghg emissions per unit energy
