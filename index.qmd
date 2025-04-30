@@ -43,11 +43,10 @@ Energy-related emissions are an important aspect of analyzing CO2 emission chang
 
 Questions (Josh):
 
-Were government economic and public restrictions the same or different during the lockdown? How does this relate to changing CO2 emissions per capita over time for the five selected countries?
+Which variables best predict **per capita CO2 emissions** for the top five cumulative CO2 emitter countries during 2015-2022?
 
-What is the share of CO2  emissions from the top five emitters post COVID?
+Which variables best predict **per unit energy CO2 emissions** for the top five cumulative CO2 emitter countries during 2015-2022?
 
-Which variables explain CO2  emissions per kilowatt-hour for the top five emitters?
 
 # **Data Exploration**
 
