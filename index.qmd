@@ -34,9 +34,15 @@ This project is also a chance to make emissions data more relatable. People ofte
 
 Lastly, we are motivated by a bigger question: what can we learn from this accidental global experiment? The pandemic gave the world a chance to see what happens when daily life suddenly changes. Some of those changes, like working from home or using less transportation, might become long-term habits. Others may disappear as economies reopen. By analyzing which emission reductions lasted and which faded, we can start to imagine more realistic and effective ways to slow down climate change.
 
+Energy-related emissions are an important aspect of analyzing CO2 emission changes before and after COVID because demands for energy will continue. Depending on where the five selected countries obtain fuels for energy generation, energy use plays a role in predicting total CO2 emissions for each country and can present opportunities for reductions in emissions. CO2 emitted per kilowatt-hour can provide insight into how much CO2 can be attributed to energy use.
+
 #### Research Question
 
 How did per capita greenhouse gas emissions change before, during, and after COVID-19 in the five largest CO₂-polluting countries, and which sector-specific emissions are the strongest predictors of these changes?
+
+Which variables best predict **per capita CO2 emissions** for the top five cumulative CO2 emitter countries during 2015-2022?
+
+Which variables best predict **per unit energy CO2 emissions** for the top five cumulative CO2 emitter countries during 2015-2022?
 
 # 
 
@@ -183,6 +189,46 @@ lm_model <- lm(ghg_excluding_lucf_per_capita ~ coal_co2 + oil_co2 + gas_co2 + ce
 summary(lm_model)
 ```
 
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Example summary dataframe (replace with your actual grouped summary if needed)
+summary_df <- df %>%
+  group_by(country, period) %>%
+  summarize(
+    mean_emission = mean(ghg_excluding_lucf_per_capita, na.rm = TRUE),
+    se = sd(ghg_excluding_lucf_per_capita, na.rm = TRUE) / sqrt(n()),
+    .groups = "drop"
+  )
+
+# Optional: Set factor order for periods
+summary_df$period <- factor(summary_df$period, levels = c("pre_covid", "during_covid", "post_covid"))
+
+# Plot
+ggplot(summary_df, aes(x = period, y = mean_emission, group = country, color = country)) +
+  geom_line(linewidth = 1.2) +
+  geom_point(size = 3) +
+  geom_errorbar(aes(ymin = mean_emission - se, ymax = mean_emission + se), width = 0.1, linewidth = 0.7) +
+  labs(
+    title = "Mean GHG Emissions Per Capita Across Periods (2015–2022)",
+    x = "COVID Period",
+    y = "GHG Emissions Per Capita"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    axis.text.x = element_text(angle = 20, hjust = 1),
+    legend.title = element_blank()
+  ) +
+  annotate("text", x = 2, y = min(summary_df$mean_emission) - 1,
+           label = "Only China, Japan, and the US showed significant changes across periods (p < 0.05, ANOVA).",
+           size = 3.8, hjust = 0.5, fontface = "italic")
+
+
+```
+
 #### Model Validation
 
 -   Plotted actual vs. predicted emissions to assess model fit.
@@ -228,3 +274,234 @@ ggplot(tidy_lm[-1, ], aes(x = estimate, y = reorder(term, estimate))) +
 ```
 
 This figure showes regression coefficients showing the relationship between sector-specific CO₂ emissions and per capita GHG emissions. Gas emissions were the strongest positive predictor, while oil and cement emissions were negatively associated with per capita emissions. Error bars represent standard errors.
+
+## CO2 per Unit Energy Modeling
+
+```{r, echo = TRUE}
+#co2_per_unit_energy
+ 
+df3 <- data_filtered %>% 
+  group_by(country) %>% 
+  filter(country %in% c("China", "India", "Russia", "United States", "Japan")) %>%
+  select(country, year, co2_per_unit_energy,
+         ghg_excluding_lucf_per_capita) %>% 
+  mutate(percap = ghg_excluding_lucf_per_capita, energy = co2_per_unit_energy)
+
+
+ggplot(df3, aes(x = factor(year), y = co2_per_unit_energy, color = country, group = country)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = " 2015 - 2022 CO2 per kilowatt-hour emissions",,
+    x = "Year", y = "CO2 produced per kwh emissions"
+  ) +
+  theme_minimal()
+
+```
+
+**Figure 2.** CO2 per kilowatt-hour emissions for the top five cumulative emitters.
+
+**Proportion of CO2 emitted by the five selected countries** In 2022, India and Russia’s CO2 emissions per kilowatt-hour have risen, while China, the United States, and Japan’s emissions have decreased. (Figure 2.) The top five biggest co2 emitted of the world emitted a total of 27168.36 million metric tons of greenhouse gases in 2022. That year, the other 213 countries emitted metric tons of greenhouse gasses, meaning 50.97 percent of greenhouse gas emissions come from the top 5 most polluting countries. The mean emissions per capita in the top 5 biggest greenhouse gas emitters was 10.45 CO2 equivalents versus a mean of only 5.59 CO2 equivalents for the rest of the countries.
+
+```{r, echo = FALSE}
+#shapiro test for Public restrictions
+normspub2 <- df3 |> 
+  nest(data = -country) |>
+  mutate(
+    Shapiro = map(data, ~ shapiro.test(na.omit(.x$energy))),  # Remove NAs before applying shapiro.test
+    n = map_dbl(data, nrow),
+    glance_shapiro = map(Shapiro, broom::glance)
+  ) |>
+  unnest(glance_shapiro)
+
+flextable::flextable(dplyr::select(normspub2, country, n, statistic, p.value)) |>
+  flextable::set_caption("Shapiro-Wilk normality test for energy consumption in each country")
+
+#This table is giving normal distribution for the p-values, so we'll do ANOVA
+
+```
+
+ANOVA for co2 emissions per unit energy
+
+```{r, echo = FALSE}
+library(ggpubr)
+
+res_aov <- aov(formula = co2_per_unit_energy ~ country, data = df3)
+
+#making sure residuals have a normal distribution
+gghistogram(res_aov$residuals)
+
+shapiro.test(res_aov$residuals)
+#p-value is .8234, so the data fit a normal distribution
+```
+
+```{r, echo = FALSE}
+library(ggpubr)
+norm_usa <- df3 %>% group_by(country) %>% 
+filter(country == "United States")
+
+gghistogram(norm_usa$energy)
+
+shapiro.test(df3$energy)
+
+#it was strange how high the p-values were for the shapiro.test so I wanted to make a histogram. The USA histogram doesn't appear to have a normal distribution
+
+```
+
+p-values from ANOVA
+
+**Table 2.** Summary statistics of an ANOVA analysis of CO2 emitted per kilowatt-hour for the top 5 cumulative CO2 emitters.
+
+```{r, echo = TRUE}
+summary(aov(formula = co2_per_unit_energy ~ country, data = df3))
+```
+
+**Difference in CO2 per kilowatt-hour emissions between countries** There is a statistically significant difference (p \< 0.000) in CO2 per kilowatt-hour for the top 5 biggest cumulative CO2 emitters (Table 2).
+
+## Predicting CO2 Emissions per unit Energy
+
+Mutate data, check for Interaction terms
+
+```{r, echo = TRUE}
+#set a seed
+set.seed(341)
+
+#doing a correlation test for variables
+1
+ghg_per_eny <- data_filtered %>% 
+  mutate(period = case_when(
+    year <= 2019 ~ "pre_covid",
+    year == 2020 ~ "during_covid",
+    year >= 2021 ~ "post_covid"
+  )) %>% 
+  group_by(country) %>% 
+  mutate(gdp_percap = gdp/population) %>% 
+  ungroup() %>% 
+select(co2_per_unit_energy, share_global_luc_co2,
+gas_co2_per_capita, oil_co2_per_capita, gdp_percap, coal_co2_per_capita, share_global_coal_co2, cumulative_luc_co2, share_global_luc_co2) %>%
+  drop_na
+
+# cor(ghg_per_eny)
+
+```
+
+None of the variables had strong enough correlations to make interaction terms.
+
+## making testing and training data for energy consumption
+
+```{r, echo = TRUE}
+#find recipe format from lab 6 / model daily assignments
+library(rsample)
+
+ghg_per_eny_split <- initial_split(ghg_per_eny, prop = .8)
+ghg_per_eny_train <- training(ghg_per_eny_split)
+ghg_per_eny_test  <- testing(ghg_per_eny_split)
+
+
+ghg_per_eny_cv <- vfold_cv(ghg_per_eny, v = 10)
+```
+
+```{r, echo = TRUE}
+#attempted recipe format
+library(recipes)
+
+rec_energy <- recipe(co2_per_unit_energy ~
+gas_co2_per_capita + oil_co2_per_capita + gdp_percap + coal_co2_per_capita + share_global_coal_co2 + cumulative_luc_co2 + share_global_luc_co2, data = ghg_per_eny) %>%
+  step_naomit(all_predictors(), all_outcomes())
+
+#ok, it's not worth logging any of these predictors because the models I'm making don't require normal distributions
+```
+
+Making different models to test against
+
+```{r, echo = TRUE}
+#making the models
+library(parsnip)
+
+boost <- boost_tree() %>%
+  # define the engine
+  set_engine("xgboost") %>%
+  # define the mode
+  set_mode("regression")
+
+nnet <- bag_mlp() %>%
+  # define the engine
+  set_engine("nnet") %>%
+  # define the mode
+  set_mode("regression")
+
+dtree <- decision_tree() %>%
+  # define the engine
+  set_engine("rpart") %>%
+  # define the mode
+  set_mode("regression")
+
+rf <- rand_forest(
+  mtry = 5,
+  trees = 1000,
+  min_n = 5
+) %>%
+  set_engine("ranger", importance = "impurity") %>% 
+  set_mode("regression")
+```
+
+Plotting the best predictive models of emissions per unit energy
+
+```{r, echo = TRUE}
+library(workflowsets)
+library(baguette)
+library(ranger)
+
+wf <-  workflow_set(list(rec_energy), 
+                  list(boost,
+                       nnet,
+                       dtree,
+                       rf)) %>%
+  workflow_map('fit_resamples', resamples = ghg_per_eny_cv) 
+
+
+autoplot(wf)
+```
+
+**Figure 4.** Ranking different models' root mean squared error and R-squared error values, tested against CO2 per kilowatt hour emissions data for the top five cumulative CO2 emitters.
+
+Results:
+
+The graph shows that random forest is the best model for predicting carbon emissions per unit energy.
+
+**Table 3.** Ranking Model Testing Results
+
+```{r, echo = TRUE}
+rank_results(wf, rank_metric = "rsq", select_best = TRUE)
+```
+
+The random forest does best in this situation to model ghg emissions per unit energy
+
+### Making a workflow to predict ghg emitted per kilowatt-hour
+
+```{r, echo = TRUE}
+library(tidymodels)
+rf_wf <- workflow() %>%
+  # Add the recipe
+  add_recipe(rec_energy) %>%
+  # Add the model
+  add_model(rf) %>%
+  # Fit the model to the training data
+  fit(data = ghg_per_eny_train) 
+
+rf_data <- augment(rf_wf, new_data = ghg_per_eny_test)
+
+dim(rf_data)
+
+```
+
+finding the most statistically significant predictors
+
+```{r, echo = TRUE}
+rf_model <- extract_fit_engine(rf_wf)
+vip::vip(rf_model)
+```
+
+**Figure 5.** Ranking importance of each predictor variable at explaining CO2 emissions per kilowatt-hour in the random forest model selected for analysis.
+
+**Predictor variables for CO2 per kilowatt-hour** The graph shows that random forest is the best model for predicting carbon emissions per unit energy, with an R-squared of 0.91. (Figure 4). The most explanatory variable for predicting CO2 emissions per unit of energy consumption during the the 2015 to 2022 period in the five countries examined was GDP per capita followed by CO2 emitted from gas per capita (Figure 5).
