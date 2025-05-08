@@ -162,7 +162,23 @@ This graph shows where each country's emissions came from — like coal, oil, ga
 -   Linear Regression: Modeled per capita GHG emissions (ghg_excluding_lucf_per_capita) as a function of sector-specific CO₂ emissions (coal_co2, oil_co2, gas_co2, cement_co2, other_industry_co2).
 
 ```{r}
-# Running ANOVA on each country if they have more than one period
+# 1. Prepare data
+df <- data_filtered |>
+  filter(country %in% top_emitters) |>
+  select(country, year, ghg_excluding_lucf_per_capita,
+         coal_co2, gas_co2, oil_co2, cement_co2, other_industry_co2,
+         gdp, population) |>
+  mutate(
+    gdp_per_capita = gdp / population,
+    period = case_when(
+      year <= 2019 ~ "pre_covid",
+      year == 2020 ~ "during_covid",
+      year >= 2021 ~ "post_covid"
+    )
+  ) |>
+  mutate(period = factor(period, levels = c("pre_covid", "during_covid", "post_covid")))
+
+# 2. Run ANOVA for each country
 for (c in unique(df$country)) {
   df_country <- df |> filter(country == c)
   if (n_distinct(df_country$period) > 1) {
@@ -173,6 +189,18 @@ for (c in unique(df$country)) {
     cat("\n--- Skipped ANOVA for", c, ": not enough periods ---\n")
   }
 }
+
+# 3. Plot GHG per Capita vs GDP per Capita
+ggplot(df, aes(x = gdp_per_capita, y = ghg_excluding_lucf_per_capita, color = country)) +
+  geom_point(aes(shape = period), size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(
+    title = "GHG per Capita vs GDP per Capita",
+    subtitle = "Colored by country, shaped by pre/during/post COVID",
+    x = "GDP per Capita (USD)",
+    y = "GHG per Capita (tCO₂e)"
+  ) +
+  theme_minimal()
 
 ```
 
