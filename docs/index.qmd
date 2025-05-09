@@ -43,11 +43,10 @@ Energy-related emissions are an important aspect of analyzing CO2 emission chang
 
 Questions (Josh):
 
-Were government economic and public restrictions the same or different during the lockdown? How does this relate to changing CO2 emissions per capita over time for the five selected countries?
+Which variables best predict **per capita CO2 emissions** for the top five cumulative CO2 emitter countries during 2015-2022?
 
-What is the share of CO2  emissions from the top five emitters post COVID?
+Which variables best predict **per unit energy CO2 emissions** for the top five cumulative CO2 emitter countries during 2015-2022?
 
-Which variables explain CO2  emissions per kilowatt-hour for the top five emitters?
 
 # **Data Exploration**
 
@@ -58,10 +57,9 @@ library(ggplot2)
 library(tidyr)
 library(dplyr)
 
-data <- read_csv("data/owid-co2-data (1).csv")
+data <- read_csv("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/owid-co2-data.csv")
 
-meta <- read_csv("data/owid-co2-codebook (1).csv")
-
+meta <- read_csv("C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/data/owid-co2-codebook.csv")
 ```
 ## Narrowing Data to 2015-2022
 ```{r}
@@ -183,7 +181,7 @@ meta %>%
 ```{r, echo = FALSE}
 #include a table of variables and their meaning (reference df above)
 # copy metadata from orig proj to here
-names(df)
+#names(df)
 ```
 ## Understanding Public Restrictions
 
@@ -210,9 +208,8 @@ govres_pubhealth <- read_excel("C:/Users/Joshua Puyear/Documents/csu-undergrad/e
 ```
 
 ```{r, echo = FALSE}
-names(govres)
-
-summary(govres)
+#names(govres)
+#summary(govres)
 ```
 
 
@@ -256,7 +253,7 @@ ggplot(df2_long, aes(x = Date, y = Rigidity, color = Restriction, group = intera
   theme_minimal()
 
 
-ggsave("countryrestrict.pdf", plot = last_plot(), path = "C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/docs", width = 12, height = 6)
+ggsave("countryrestrict.pdf", plot = last_plot(), path = "C:/Users/Joshua Puyear/Documents/csu-undergrad/ess-330-joshp-2025/github/ESS-330-FinalProject-April23/imgs", width = 12, height = 6)
 ```
 **Figure 1.** Daily COVID lockdown restriction indices (Oxford, 2022), separated by Economic and Public.
 
@@ -456,12 +453,13 @@ There is a statistically significant difference (p < 0.000) in CO2 per kilowatt-
 
 ## Predicting CO2 Emissions per unit Energy
 
-``` {r, echo = FALSE}
+Mutate data, check for Interaction terms
+``` {r, echo = TRUE}
 #set a seed
 set.seed(341)
 
 #doing a correlation test for variables
-
+1
 ghg_per_eny <- data_filtered %>% 
   mutate(period = case_when(
     year <= 2019 ~ "pre_covid",
@@ -475,13 +473,14 @@ select(co2_per_unit_energy, share_global_luc_co2,
 gas_co2_per_capita, oil_co2_per_capita, gdp_percap, coal_co2_per_capita, share_global_coal_co2, cumulative_luc_co2, share_global_luc_co2) %>%
   drop_na
 
-cor(ghg_per_eny)
+# cor(ghg_per_eny)
 
 ```
+None of the variables had strong enough correlations to make interaction terms.
 
 ## making testing and training data for energy consumption
 
-```{r, echo = FALSE}
+```{r, echo = TRUE}
 #find recipe format from lab 6 / model daily assignments
 library(rsample)
 
@@ -494,7 +493,7 @@ ghg_per_eny_cv <- vfold_cv(ghg_per_eny, v = 10)
 ```
 
 
-```{r, echo = FALSE}
+```{r, echo = TRUE}
 #attempted recipe format
 library(recipes)
 
@@ -505,7 +504,8 @@ gas_co2_per_capita + oil_co2_per_capita + gdp_percap + coal_co2_per_capita + sha
 #ok, it's not worth logging any of these predictors because the models I'm making don't require normal distributions
 ```
 
-```{r, echo = FALSE}
+Making different models to test against
+```{r, echo = TRUE}
 #making the models
 library(parsnip)
 
@@ -533,7 +533,7 @@ rf <- rand_forest(
   min_n = 5
 ) %>%
   set_engine("ranger", importance = "impurity") %>%  # <-- ADD THIS
-  set_mode("regression")  
+  set_mode("regression")
 ```
 
 Plotting the best predictive models of emissions per unit energy
@@ -564,7 +564,8 @@ rank_results(wf, rank_metric = "rsq", select_best = TRUE)
 
 The random forest does best in this situation to model ghg emissions per unit energy
 
-```{r, echo = FALSE}
+### Making a workflow to predict ghg emitted per kilowatt-hour
+```{r, echo = TRUE}
 library(tidymodels)
 rf_wf <- workflow() %>%
   # Add the recipe
@@ -580,12 +581,10 @@ dim(rf_data)
 
 ```
 
-
+finding the most statistically significant predictors
 ```{r, echo = TRUE}
-#finding the most statistically significant predictors
 rf_model <- extract_fit_engine(rf_wf)
 vip::vip(rf_model)
-
 ```
 **Figure 5.** Ranking importance of each predictor variable at explaining CO2 emissions per kilowatt-hour in the random forest model selected for analysis.
 
